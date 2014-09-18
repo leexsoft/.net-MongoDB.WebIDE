@@ -1,3 +1,5 @@
 /Lib
 /MongoDB.Driver
 /MongodbManagementStudio
+bin
+obj

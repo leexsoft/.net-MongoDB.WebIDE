@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Driver", "MongoDB.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongodbManagementStudio", "MongodbManagementStudio\MongodbManagementStudio.csproj", "{BA2CE1D2-9EB3-43CC-A196-53038E7737F2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{AAB59B74-BE7B-4E7C-A8AA-BA371E85026C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NoUse", "NoUse", "{AAB59B74-BE7B-4E7C-A8AA-BA371E85026C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Persist", "MongoDB.Persist\MongoDB.Persist.csproj", "{77B3AA49-E34E-4801-AA7E-1C1E88D07C95}"
 EndProject
@@ -39,5 +39,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA2CE1D2-9EB3-43CC-A196-53038E7737F2} = {AAB59B74-BE7B-4E7C-A8AA-BA371E85026C}
+		{B125BBA6-BFFD-44FA-9254-9B1754CD8AF3} = {AAB59B74-BE7B-4E7C-A8AA-BA371E85026C}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,15 @@
+﻿/* File Created: 八月 14, 2014 */
+.default-height { height: 700px; }
+.mt10 { margin-top: 10px; }
+.pr10 { padding-right: 10px; }
+
+/*导航栏*/
+.site-nav { background-image: url("../image/headbg.png"); }
+.site-left { border-right: solid 1px #cccccc; }
+.site-left-top { height: 32px; background-image: url("../image/left_top.gif"); }
+
+/*页面标题*/
+.PageTitle { height: 32px; line-height: 32px; white-space: nowrap; vertical-align: middle; background: url('../image/pagetitlebg.gif') repeat-x; }
+.PageTitle div { white-space: nowrap; }
+.PageTitle img { vertical-align: middle; }
+.PageTitle span { font-size: 12px; font-weight: bold; }

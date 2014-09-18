@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/bootstrap/css/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/css/site.css")">
+	@RenderSection("style", false)
+</head>
+<body>
+    @RenderBody()
+	<script src="@Url.Content("~/Content/js/jquery-1.11.1.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Content/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+	@RenderSection("script", false)
+</body>
+</html>

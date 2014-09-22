@@ -36,10 +36,5 @@ namespace MongoDB.Component
         {
             return MongoInfo.GetInfo();
         }
-
-        public int GetProfileStatus()
-        {
-            return MongoInfo.GetProfileStatus();
-        }
     }
 }

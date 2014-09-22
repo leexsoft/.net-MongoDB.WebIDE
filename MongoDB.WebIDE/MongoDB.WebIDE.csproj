@@ -122,7 +122,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\DBAdmin\" />
+    <Content Include="Views\DBAdmin\ShowIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />
@@ -141,7 +141,7 @@
     <Content Include="Config\servers.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\ShowInfo.cshtml" />
+    <Content Include="Views\DBAdmin\ShowInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Layout.cshtml" />

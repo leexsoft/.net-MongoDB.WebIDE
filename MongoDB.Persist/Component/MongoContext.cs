@@ -164,7 +164,7 @@ namespace MongoDB.Component
                         ID = Guid.NewGuid(),
                         PID = table.ID,
                         Name = "字段",
-                        Type = MongoTreeNodeType.Filler
+                        Type = MongoTreeNodeType.FieldFiller
                     };
                     TreeNodes.Add(fieldNode);
 
@@ -198,7 +198,7 @@ namespace MongoDB.Component
                         ID = Guid.NewGuid(),
                         PID = table.ID,
                         Name = "索引",
-                        Type = MongoTreeNodeType.Filler
+                        Type = MongoTreeNodeType.IndexFiller
                     };
                     TreeNodes.Add(indexNode);
 
@@ -212,8 +212,19 @@ namespace MongoDB.Component
                             {
                                 ID = Guid.NewGuid(),
                                 Name = idx["name"].ToString(),
-                                Unique = Convert.ToBoolean(idx["unique"])
+                                Namespace = idx["ns"].ToString(),
+                                Unique = Convert.ToBoolean(idx["unique"]),
+                                Keys = new List<MongoIndexKey>()
                             };
+                            var docFields = idx["key"] as Document;
+                            foreach (var key in docFields.Keys)
+                            {
+                                index.Keys.Add(new MongoIndexKey
+                                {
+                                    FieldName = key.ToString(),
+                                    OrderType = int.Parse(docFields[key.ToString()].ToString()) == 1 ? MongoIndexOrderType.Ascending : MongoIndexOrderType.Descending
+                                });
+                            }
 
                             TreeNodes.Add(new MongoTreeNode
                             {

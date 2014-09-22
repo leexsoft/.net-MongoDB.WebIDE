@@ -37,9 +37,14 @@ namespace MongoDB.Defination
         [Description("索引")]
         Index =5,
         /// <summary>
-        /// 填充节点
+        /// 字段填充节点(查看字段的数据)
         /// </summary>
-        [Description("填充节点")]
-        Filler = 5
+        [Description("字段填充节点")]
+        FieldFiller = 6,
+        /// <summary>
+        /// 索引填充节点
+        /// </summary>
+        [Description("索引填充节点")]
+        IndexFiller = 7
     }
 }

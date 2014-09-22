@@ -3,3 +3,7 @@
 /MongodbManagementStudio
 bin
 obj
+
+*.suo
+
+*.user

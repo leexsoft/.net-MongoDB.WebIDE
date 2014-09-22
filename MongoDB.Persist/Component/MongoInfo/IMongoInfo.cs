@@ -13,7 +13,5 @@ namespace MongoDB.Component
         /// </summary>
         /// <returns></returns>
         List<MongoTreeNode> GetInfo();
-
-        int GetProfileStatus();
     }
 }

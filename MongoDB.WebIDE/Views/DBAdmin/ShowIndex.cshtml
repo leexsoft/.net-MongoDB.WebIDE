@@ -1,0 +1,55 @@
+﻿@using MongoDB.WebIDE.Models
+@using MongoDB.Defination
+@using MongoDB.Model
+@model List<MongoIndex>
+<div class="PageTitle">
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">表索引</strong>
+</div>
+<div class="alert-success mt10">
+	统计信息
+</div>
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		<th>
+			名称
+		</th>
+		<th>
+			命名空间
+		</th>
+		<th>
+			字段
+		</th>
+		<th>
+			是否唯一
+		</th>
+	</tr>
+	@{
+		foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				@item.Name
+			</td>
+			<td>
+				@item.Namespace
+			</td>
+			<td>
+				@{
+			foreach (var key in item.Keys)
+			{
+					<p>
+						<span>@key.FieldName : @(key.OrderType == MongoIndexOrderType.Ascending ? "升序" : "降序")</span></p>
+			}
+				}
+			</td>
+			<td>
+				<div class="form-inline">
+					<label class="checkbox inline">
+						<input type="checkbox" @(item.Unique ? "checked" : "") disabled />
+					</label>
+				</div>
+			</td>
+		</tr>
+		}
+	}
+</table>

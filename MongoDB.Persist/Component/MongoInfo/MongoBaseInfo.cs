@@ -6,14 +6,8 @@ using MongoDB.Model;
 
 namespace MongoDB.Component
 {
-    public class MongoBaseInfo : IMongoInfo
+    public class MongoBaseInfo : MongoBase, IMongoInfo
     {
-        protected string ConnString = "Server={0}";
-
-        protected MongoServer Server { get; set; }
-        protected MongoDatabase Database { get; set; }
-        protected MongoCollection Table { get; set; }
-
         #region 接口实现
         /// <summary>
         /// 获取服务器信息
@@ -22,11 +16,6 @@ namespace MongoDB.Component
         public virtual List<MongoTreeNode> GetInfo()
         {
             return null;
-        }
-
-        public virtual int GetProfileStatus()
-        {
-            return 0;
         }
         #endregion
 

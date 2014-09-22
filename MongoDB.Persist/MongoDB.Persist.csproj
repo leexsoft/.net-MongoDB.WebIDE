@@ -48,8 +48,11 @@
     <Compile Include="Component\MongoInfo\MongoDatabaseInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoBaseInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoCollectionInfo.cs" />
+    <Compile Include="Component\MongoInfo\MongoBase.cs" />
+    <Compile Include="Component\MongoProfileContext.cs" />
     <Compile Include="Defination\MongoTreeNode.cs" />
     <Compile Include="Defination\MongoTreeNodeType.cs" />
+    <Compile Include="Defination\MongoIndexOrderType.cs" />
     <Compile Include="Model\MongoDatabase.cs" />
     <Compile Include="Model\MongoCollection.cs" />
     <Compile Include="Model\MongoFiled.cs" />

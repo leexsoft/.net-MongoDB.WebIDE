@@ -41,24 +41,5 @@ namespace MongoDB.Component
                 return list;
             }
         }
-
-        public override int GetProfileStatus()
-        {
-            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
-            {
-                mongo.Connect();
-                var db = mongo.GetDatabase(Database.Name);
-                var levelDoc = db.SendCommand(new Document().Append("profile", -1));
-                if (levelDoc != null)
-                {
-                    int ok = int.Parse(levelDoc["ok"].ToString());
-                    if (ok == 1)
-                    {
-                        return int.Parse(levelDoc["was"].ToString());
-                    }
-                }
-                return 0;
-            }
-        }
     }
 }

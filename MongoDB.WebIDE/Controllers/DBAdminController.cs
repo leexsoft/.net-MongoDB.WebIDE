@@ -80,6 +80,12 @@ namespace MongoDB.WebIDE.Controllers
             return Json(model);
         }
 
+        public ActionResult ShowData(string id)
+        {
+
+            return View();
+        }
+
         public ActionResult ShowIndex(string id)
         {
             var guid = Guid.Parse(id);

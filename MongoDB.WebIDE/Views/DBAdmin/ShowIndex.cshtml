@@ -36,9 +36,8 @@
 			<td>
 				@{
 			foreach (var key in item.Keys)
-			{
-					<p>
-						<span>@key.FieldName : @(key.OrderType == MongoIndexOrderType.Ascending ? "升序" : "降序")</span></p>
+			{					
+					<span>@key.FieldName : @(key.OrderType == MongoIndexOrderType.Ascending ? "升序" : "降序")</span><br />
 			}
 				}
 			</td>

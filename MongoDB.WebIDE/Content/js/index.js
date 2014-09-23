@@ -4,13 +4,12 @@
     var nodeClick = function (event, treeId, treeNode) {
         var type = treeNode.Type;
         var id = treeNode.ID;
-        var pid = treeNode.PID;
         var url = "";
         if (type == 1 || type == 2 || type == 3) {
             url = "/DBAdmin/ShowInfo?id=" + id + "&type=" + type;
             $main.prop("src", url);
         } else if (type == 6) {
-            url = "/DBAdmin/ShowData?id=" + pid;
+            url = "/DBAdmin/ShowData?id=" + id;
             $main.prop("src", url);
         } else if (type == 7) {
              url = "/DBAdmin/ShowIndex?id=" + id;

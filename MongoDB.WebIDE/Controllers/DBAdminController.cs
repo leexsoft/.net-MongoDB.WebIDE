@@ -82,8 +82,13 @@ namespace MongoDB.WebIDE.Controllers
 
         public ActionResult ShowData(string id)
         {
-
-            return View();
+            var mongo = new MongoDataContext(id);
+            var model = new ShowDataModel
+            {
+                Fields = mongo.GetFieldNodes(id),
+                Data = mongo.GetData(50)
+            };
+            return View(model);
         }
 
         public ActionResult ShowIndex(string id)

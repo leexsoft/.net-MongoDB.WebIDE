@@ -1,0 +1,34 @@
+﻿@using MongoDB.WebIDE.Models
+@using MongoDB.Defination
+@model ShowDataModel
+<div class="PageTitle">
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">表数据</strong>
+</div>
+<div class="alert-success mt10">
+	统计信息
+</div>
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		@{
+			foreach (var item in Model.Fields)
+			{
+			<th>
+				@item.Name
+			</th>
+			}
+		}
+	</tr>
+	@{
+		foreach (var doc in Model.Data)
+		{
+		<tr>
+			@foreach (var item in Model.Fields)
+   {
+				<td>
+					@doc[item.Name]
+				</td>
+   }
+		</tr>
+		}
+	}
+</table>

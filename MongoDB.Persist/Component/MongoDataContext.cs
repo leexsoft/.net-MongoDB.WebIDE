@@ -11,9 +11,9 @@ namespace MongoDB.Component
     {
         public MongoDataContext(string id)
         {
-            var guid = Guid.Parse(id);
+            ID = Guid.Parse(id);
 
-            var fieldNode = MongoContext.GetTreeNode(guid);
+            var fieldNode = MongoContext.GetTreeNode(ID);
             var tbNode = MongoContext.GetTreeNode(fieldNode.PID);
             var dbNode = MongoContext.GetTreeNode(tbNode.PID);
             var serverNode = MongoContext.GetTreeNode(dbNode.PID);
@@ -23,10 +23,9 @@ namespace MongoDB.Component
             Table = MongoContext.GetMongoObject(tbNode.ID) as MongoCollection;
         }
 
-        public List<MongoTreeNode> GetFieldNodes(string id)
+        public List<MongoTreeNode> GetFieldNodes()
         {
-            var guid = Guid.Parse(id);
-            return MongoContext.GetTreeNodes().Where(n => n.PID == guid).ToList();
+            return MongoContext.GetTreeNodes().Where(n => n.PID == ID).ToList();
         }
 
         public List<Document> GetData(int limit)

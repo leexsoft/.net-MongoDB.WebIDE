@@ -10,8 +10,8 @@ namespace MongoDB.Component
     {
         public MongoServerInfo(string id)
         {
-            var guid = Guid.Parse(id);
-            Server = MongoContext.GetMongoObject(guid) as MongoServer;
+            ID = Guid.Parse(id);
+            Server = MongoContext.GetMongoObject(ID) as MongoServer;
         }
 
         /// <summary>

@@ -5,55 +5,25 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
 }
 @section script{
+	<script type="text/javascript">
+		var zNodes = @Html.Raw(Model.JsonData);
+	</script>
 	<script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
 	<script src="@Url.Content("~/Content/js/showinfo.js")" type="text/javascript"></script>
 }
-<input id="guid" type="hidden" value="@Model.Id" />
-<input id="type" type="hidden" value="@Model.Type" />
 <div class="PageTitle">
-	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Name</strong>
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
-<div class="accordion mt10" id="accordionInfo">
-	<div class="accordion-group">
-		<div class="accordion-heading alert-success">
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionInfo" href="#collapseOne">统计信息&nbsp;<i class="icon-chevron-down"></i></a>
-		</div>
-		<div id="collapseOne" class="accordion-body collapse">
-			<div class="accordion-inner alert-info">
-				<ul id="infotree" class="ztree">
-				</ul>
-			</div>
-		</div>
+<div class="accordion-heading alert-success mt10">
+	<a class="accordion-toggle">统计信息</a>
+</div>
+<div class="alert-info">
+	<ul id="infotree" class="ztree">
+	</ul>
+</div>
+@if (Model.Type == (int)MongoTreeNodeType.Database)
+{
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowProfileInfo">查看Profile信息</a>
 	</div>
-	@if (Model.Type == (int)MongoTreeNodeType.Database)
- {
-		<div class="accordion-group">
-			<div class="accordion-heading alert-success">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionInfo" href="#collapseTwo">Profile&nbsp;<i class="icon-chevron-down"></i></a>
-			</div>
-			<div id="collapseTwo" class="accordion-body collapse">
-				<div class="accordion-inner alert-info">
-					<div class="form-inline">
-						<label class="radio inline">
-							<strong>设置Profile:</strong>
-						</label>
-						<label class="radio inline">
-							<input type="radio" id="inlineCheckbox1" value="0">不开启
-						</label>
-						<label class="radio inline">
-							<input type="radio" id="inlineCheckbox2" value="1">记录慢命令
-						</label>
-						<label class="radio inline">
-							<input type="radio" id="inlineCheckbox3" value="2">记录所有命令
-						</label>
-						<label class="radio inline">
-							<strong>慢命令时间：</strong>
-							<input type="text" id="slowms" value="100" class="input-mini" disabled />
-							<a class="btn btn-primary btn-small">设置</a>
-						</label>
-					</div>
-				</div>
-			</div>
-		</div>
- }
-</div>
+}

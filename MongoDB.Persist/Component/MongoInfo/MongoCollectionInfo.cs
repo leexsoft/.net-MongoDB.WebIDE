@@ -10,15 +10,15 @@ namespace MongoDB.Component
     {
         public MongoCollectionInfo(string id)
         {
-            var guid = Guid.Parse(id);
+            ID = Guid.Parse(id);
 
-            var tbNode = MongoContext.GetTreeNode(guid);
+            var tbNode = MongoContext.GetTreeNode(ID);
             var dbNode = MongoContext.GetTreeNode(tbNode.PID);
             var serverNode = MongoContext.GetTreeNode(dbNode.PID);
 
             Server = MongoContext.GetMongoObject(serverNode.ID) as MongoServer;
             Database = MongoContext.GetMongoObject(dbNode.ID) as MongoDatabase;
-            Table = MongoContext.GetMongoObject(guid) as MongoCollection;
+            Table = MongoContext.GetMongoObject(ID) as MongoCollection;
         }
 
         /// <summary>

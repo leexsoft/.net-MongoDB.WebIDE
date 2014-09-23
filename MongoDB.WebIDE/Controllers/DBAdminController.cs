@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using MongoDB.Component;
 using MongoDB.Defination;
-using MongoDB.WebIDE.Models;
 using MongoDB.Model;
-using MongoDB.Component;
-using System.Collections.Generic;
+using MongoDB.WebIDE.Models;
+using Newtonsoft.Json;
+
 
 namespace MongoDB.WebIDE.Controllers
 {
@@ -14,23 +15,23 @@ namespace MongoDB.WebIDE.Controllers
     {
         public ActionResult ShowInfo(string id, int type)
         {
-            var model = new ShowInfoModel
+            var model = new ShowInfoModel 
             {
-                Id = id,
                 Type = type
             };
 
+            //获取描述
             var gid = Guid.Parse(id);
             if (type == (int)MongoTreeNodeType.Server)
             {
                 var server = MongoContext.GetMongoObject(gid) as MongoServer;
                 if (server == null)
                 {
-                    RedirectToAction("CacheExpire");
+                    return RedirectToAction("CacheExpire", "Home");
                 }
                 else
                 {
-                    model.Name = server.FullInfo;
+                    model.Title = server.FullInfo;
                 }
             }
             else if (type == (int)MongoTreeNodeType.Database)
@@ -38,11 +39,11 @@ namespace MongoDB.WebIDE.Controllers
                 var database = MongoContext.GetMongoObject(gid) as MongoDatabase;
                 if (database == null)
                 {
-                    RedirectToAction("CacheExpire");
+                    return RedirectToAction("CacheExpire", "Home");
                 }
                 else
                 {
-                    model.Name = database.FullInfo;
+                    model.Title = database.FullInfo;
                 }
             }
             else if (type == (int)MongoTreeNodeType.Collection)
@@ -50,27 +51,23 @@ namespace MongoDB.WebIDE.Controllers
                 var table = MongoContext.GetMongoObject(gid) as MongoCollection;
                 if (table == null)
                 {
-                    RedirectToAction("CacheExpire");
+                    return RedirectToAction("CacheExpire", "Home");
                 }
                 else
                 {
-                    model.Name = table.FullInfo;
+                    model.Title = table.FullInfo;
                 }
             }
+
+            //获取数据
+            var mongo = MongoInfoFactory.Create(id, type);
+            model.JsonData = JsonConvert.SerializeObject(mongo.GetInfo());
 
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult GetShowInfo(string id, int type)
-        {
-            var mongo = MongoInfoFactory.Create(id, type);
-            var nodes = mongo.GetInfo();
-            return Json(nodes);
-        }
-
-        [HttpPost]
-        public JsonResult GetPrfileInfo(string id)
+        public JsonResult ShowPrfileInfo(string id)
         {
             var mongo = new MongoProfileContext(id);
             var model = new ProfileInfoModel
@@ -85,7 +82,8 @@ namespace MongoDB.WebIDE.Controllers
             var mongo = new MongoDataContext(id);
             var model = new ShowDataModel
             {
-                Fields = mongo.GetFieldNodes(id),
+                Title = mongo.Table.FullInfo,
+                Fields = mongo.GetFieldNodes(),
                 Data = mongo.GetData(50)
             };
             return View(model);
@@ -93,15 +91,13 @@ namespace MongoDB.WebIDE.Controllers
 
         public ActionResult ShowIndex(string id)
         {
-            var guid = Guid.Parse(id);
-            var list = MongoContext.GetTreeNodes().Where(node => node.PID == guid).ToList();
-
-            var indexes = new List<MongoIndex>();
-            foreach (var item in list)
+            var mongo = new MongoIndexContext(id);
+            var model = new ShowIndexModel
             {
-                indexes.Add(MongoContext.GetMongoObject(item.ID) as MongoIndex);
-            }
-            return View(indexes);
+                Title = mongo.Table.FullInfo,
+                Indexes = mongo.GetIndexes()
+            };
+            return View(model);
         }
     }
 }

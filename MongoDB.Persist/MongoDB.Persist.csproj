@@ -52,6 +52,7 @@
     <Compile Include="Component\MongoInfo\MongoBaseInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoCollectionInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoBase.cs" />
+    <Compile Include="Component\MongoIndexContext.cs" />
     <Compile Include="Component\MongoProfileContext.cs" />
     <Compile Include="Component\MongoDataContext.cs" />
     <Compile Include="Defination\MongoTreeNode.cs" />

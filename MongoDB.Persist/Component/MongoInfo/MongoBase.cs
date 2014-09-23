@@ -8,10 +8,11 @@ namespace MongoDB.Component
 {
     public class MongoBase
     {
-        protected string ConnString = "Server={0}";
-
-        protected MongoServer Server { get; set; }
-        protected MongoDatabase Database { get; set; }
-        protected MongoCollection Table { get; set; }
+        protected readonly string ConnString = "Server={0}";
+        
+        protected Guid ID { get; set; }
+        public MongoServer Server { get; set; }
+        public MongoDatabase Database { get; set; }
+        public MongoCollection Table { get; set; }
     }
 }

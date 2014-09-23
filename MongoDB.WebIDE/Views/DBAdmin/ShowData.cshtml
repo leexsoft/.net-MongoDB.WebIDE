@@ -2,10 +2,10 @@
 @using MongoDB.Defination
 @model ShowDataModel
 <div class="PageTitle">
-	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">表数据</strong>
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
-<div class="alert-success mt10">
-	统计信息
+<div class="accordion-heading alert-success mt10">
+	<a class="accordion-toggle">表数据</a>
 </div>
 <table class="table table-bordered table-striped table-hover">
 	<tr>
@@ -13,7 +13,7 @@
 			foreach (var item in Model.Fields)
 			{
 			<th>
-				@item.Name
+				<span class="label label-info">@item.Name</span>
 			</th>
 			}
 		}

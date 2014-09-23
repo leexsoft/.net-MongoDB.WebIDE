@@ -10,13 +10,13 @@ namespace MongoDB.Component
     {
         public MongoDatabaseInfo(string id)
         {
-            var guid = Guid.Parse(id);
+            ID = Guid.Parse(id);
 
-            var dbNode = MongoContext.GetTreeNode(guid);
+            var dbNode = MongoContext.GetTreeNode(ID);
             var serverNode = MongoContext.GetTreeNode(dbNode.PID);
 
             Server = MongoContext.GetMongoObject(serverNode.ID) as MongoServer;
-            Database = MongoContext.GetMongoObject(guid) as MongoDatabase;
+            Database = MongoContext.GetMongoObject(ID) as MongoDatabase;
         }
 
         /// <summary>

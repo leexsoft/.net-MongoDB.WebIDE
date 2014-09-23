@@ -2,6 +2,7 @@
 .default-height { height: 700px; }
 .mt10 { margin-top: 10px; }
 .pr10 { padding-right: 10px; }
+.p10 { padding: 10px; }
 
 /*导航栏*/
 .site-nav { background-image: url("../image/headbg.png"); }

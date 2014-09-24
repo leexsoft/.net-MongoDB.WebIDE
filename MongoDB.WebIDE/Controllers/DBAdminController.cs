@@ -25,7 +25,7 @@ namespace MongoDB.WebIDE.Controllers
             var gid = Guid.Parse(id);
             if (type == (int)MongoTreeNodeType.Server)
             {
-                var server = MongoContext.GetMongoObject(gid) as MongoServer;
+                var server = MongoCache.GetMongoObject(gid) as MongoServer;
                 if (server == null)
                 {
                     return RedirectToAction("CacheExpire", "Home");
@@ -37,7 +37,7 @@ namespace MongoDB.WebIDE.Controllers
             }
             else if (type == (int)MongoTreeNodeType.Database)
             {
-                var database = MongoContext.GetMongoObject(gid) as MongoDatabase;
+                var database = MongoCache.GetMongoObject(gid) as MongoDatabase;
                 if (database == null)
                 {
                     return RedirectToAction("CacheExpire", "Home");
@@ -49,7 +49,7 @@ namespace MongoDB.WebIDE.Controllers
             }
             else if (type == (int)MongoTreeNodeType.Collection)
             {
-                var table = MongoContext.GetMongoObject(gid) as MongoCollection;
+                var table = MongoCache.GetMongoObject(gid) as MongoCollection;
                 if (table == null)
                 {
                     return RedirectToAction("CacheExpire", "Home");

@@ -18,7 +18,7 @@ namespace MongoDB.WebIDE.Controllers
         [HttpPost]
         public JsonResult GetServerDetail()
         {
-            var nodes = MongoContext.GetTreeNodes();
+            var nodes = MongoCache.GetTreeNodes();
             return Json(nodes);
         }
     }

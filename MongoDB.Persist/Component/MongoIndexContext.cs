@@ -4,6 +4,7 @@ using System.Linq;
 using MongoDB.Defination;
 using MongoDB.Driver;
 using MongoDB.Model;
+using Newtonsoft.Json;
 
 namespace MongoDB.Component
 {
@@ -24,7 +25,17 @@ namespace MongoDB.Component
         }
 
         /// <summary>
-        /// 获取服务器信息
+        /// 获取字段节点信息
+        /// </summary>
+        /// <returns></returns>
+        public List<MongoTreeNode> GetFieldNodes()
+        {
+            var fieldFiller = MongoContext.GetTreeNodes().Where(n => n.PID == Table.ID && n.Type == MongoTreeNodeType.FieldFiller).First();
+            return MongoContext.GetTreeNodes().Where(n => n.PID == fieldFiller.ID).ToList();
+        }
+
+        /// <summary>
+        /// 获取索引信息
         /// </summary>
         /// <returns></returns>
         public List<MongoIndex> GetIndexes()
@@ -37,6 +48,34 @@ namespace MongoDB.Component
                 indexes.Add(MongoContext.GetMongoObject(item.ID) as MongoIndex);
             }
             return indexes;
+        }
+
+        public void CreateIndex(string jsonData)
+        {
+            var model = JsonConvert.DeserializeObject<SaveIndexModel>(jsonData);
+            var doc = ToDoc(model.Keys);
+            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
+            {
+                mongo.Connect();
+                var db = mongo.GetDatabase(Database.Name);
+
+                var tbl = db.GetCollection(Table.Name);
+                tbl.MetaData.CreateIndex(doc, model.Unique, model.Background, model.Dropdups);
+                mongo.Disconnect();
+            }
+        }
+
+        private Document ToDoc(List<KeyModel> keys)
+        {
+            Document doc = new Document();
+            if (keys != null && keys.Count > 0)
+            {
+                foreach (var key in keys)
+                {
+                    doc.Append(key.Field, key.Order);
+                }
+            }
+            return doc;
         }
     }
 }

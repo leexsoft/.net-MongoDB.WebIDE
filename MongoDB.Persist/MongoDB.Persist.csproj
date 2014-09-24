@@ -35,6 +35,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MongoDB.Driver.1.0.0.0\lib\net40\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -62,6 +65,7 @@
     <Compile Include="Model\MongoCollection.cs" />
     <Compile Include="Model\MongoFiled.cs" />
     <Compile Include="Model\MongoIndex.cs" />
+    <Compile Include="Model\SaveIndexModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\MongoServer.cs" />
   </ItemGroup>

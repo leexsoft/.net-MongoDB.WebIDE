@@ -13,9 +13,10 @@ namespace MongoDB.WebIDE.Controllers
 {
     public class DBAdminController : Controller
     {
+        #region 查看统计信息
         public ActionResult ShowInfo(string id, int type)
         {
-            var model = new ShowInfoModel 
+            var model = new ShowInfoModel
             {
                 Type = type
             };
@@ -65,18 +66,9 @@ namespace MongoDB.WebIDE.Controllers
 
             return View(model);
         }
+        #endregion
 
-        [HttpPost]
-        public JsonResult ShowPrfileInfo(string id)
-        {
-            var mongo = new MongoProfileContext(id);
-            var model = new ProfileInfoModel
-            {
-                Status = mongo.GetProfileStatus()
-            };
-            return Json(model);
-        }
-
+        #region 查询数据
         public ActionResult ShowData(string id)
         {
             var mongo = new MongoDataContext(id);
@@ -88,16 +80,49 @@ namespace MongoDB.WebIDE.Controllers
             };
             return View(model);
         }
+        #endregion
 
+        #region 索引管理
         public ActionResult ShowIndex(string id)
         {
             var mongo = new MongoIndexContext(id);
             var model = new ShowIndexModel
             {
+                ID = id,
                 Title = mongo.Table.FullInfo,
+                Fields = mongo.GetFieldNodes(),
                 Indexes = mongo.GetIndexes()
             };
             return View(model);
         }
+
+        [HttpPost]
+        public JsonResult CreateIndex(string id, string data)
+        {
+            var mongo = new MongoIndexContext(id);
+            try
+            {
+                mongo.CreateIndex(data);
+                return Json(new { Success = true, Message = "索引创建成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region Prfile优化
+        [HttpPost]
+        public JsonResult ShowPrfileInfo(string id)
+        {
+            var mongo = new MongoProfileContext(id);
+            var model = new ProfileInfoModel
+            {
+                Status = mongo.GetProfileStatus()
+            };
+            return Json(model);
+        }
+        #endregion
     }
 }

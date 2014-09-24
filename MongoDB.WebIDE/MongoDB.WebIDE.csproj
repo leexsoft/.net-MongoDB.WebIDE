@@ -67,6 +67,7 @@
     <Compile Include="Models\ProfileInfoModel.cs" />
     <Compile Include="Models\ShowDataModel.cs" />
     <Compile Include="Models\ShowIndexModel.cs" />
+    <Compile Include="Models\SaveIndexModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,7 @@
     <Content Include="Content\image\left_top.gif" />
     <Content Include="Content\image\Logo.png" />
     <Content Include="Content\image\pagetitlebg.gif" />
+    <Content Include="Content\js\common.js" />
     <Content Include="Content\js\index.js" />
     <Content Include="Content\js\jquery-1.11.1.min.js" />
     <Content Include="Content\js\showinfo.js" />

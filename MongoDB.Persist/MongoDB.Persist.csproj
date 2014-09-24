@@ -54,10 +54,11 @@
     <Compile Include="Component\MongoInfo\MongoDatabaseInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoBaseInfo.cs" />
     <Compile Include="Component\MongoInfo\MongoCollectionInfo.cs" />
-    <Compile Include="Component\MongoInfo\MongoBase.cs" />
-    <Compile Include="Component\MongoIndexContext.cs" />
-    <Compile Include="Component\MongoProfileContext.cs" />
-    <Compile Include="Component\MongoDataContext.cs" />
+    <Compile Include="Component\MongoBase.cs" />
+    <Compile Include="Component\MongoContext\MongoIndexContext.cs" />
+    <Compile Include="Component\MongoContext\MongoProfileContext.cs" />
+    <Compile Include="Component\MongoContext\MongoDataContext.cs" />
+    <Compile Include="Component\MongoCache.cs" />
     <Compile Include="Defination\MongoTreeNode.cs" />
     <Compile Include="Defination\MongoTreeNodeType.cs" />
     <Compile Include="Defination\MongoIndexOrderType.cs" />
@@ -71,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

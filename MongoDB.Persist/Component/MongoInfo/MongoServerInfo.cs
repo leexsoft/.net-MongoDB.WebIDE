@@ -11,7 +11,7 @@ namespace MongoDB.Component
         public MongoServerInfo(string id)
         {
             ID = Guid.Parse(id);
-            Server = MongoContext.GetMongoObject(ID) as MongoServer;
+            Server = MongoCache.GetMongoObject(ID) as MongoServer;
         }
 
         /// <summary>

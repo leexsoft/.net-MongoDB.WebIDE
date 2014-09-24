@@ -12,20 +12,19 @@ namespace MongoDB.Component
         public MongoDataContext(string id)
         {
             ID = Guid.Parse(id);
+            var fieldNode = MongoCache.GetTreeNode(ID);
 
-            var fieldNode = MongoContext.GetTreeNode(ID);
-            var tbNode = MongoContext.GetTreeNode(fieldNode.PID);
-            var dbNode = MongoContext.GetTreeNode(tbNode.PID);
-            var serverNode = MongoContext.GetTreeNode(dbNode.PID);
-
-            Server = MongoContext.GetMongoObject(serverNode.ID) as MongoServer;
-            Database = MongoContext.GetMongoObject(dbNode.ID) as MongoDatabase;
-            Table = MongoContext.GetMongoObject(tbNode.ID) as MongoCollection;
+            var tbNode = MongoCache.GetTreeNode(fieldNode.PID);
+            Table = MongoCache.GetMongoObject(tbNode.ID) as MongoCollection;
+            var dbNode = MongoCache.GetTreeNode(tbNode.PID);
+            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabase;
+            var serverNode = MongoCache.GetTreeNode(dbNode.PID);
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
         }
 
         public List<MongoTreeNode> GetFieldNodes()
         {
-            return MongoContext.GetTreeNodes().Where(n => n.PID == ID).ToList();
+            return MongoCache.GetTreeNodes().Where(n => n.PID == ID).ToList();
         }
 
         public List<Document> GetData(int limit)

@@ -13,15 +13,14 @@ namespace MongoDB.Component
         public MongoIndexContext(string id)
         {
             ID = Guid.Parse(id);
+            var idxNode = MongoCache.GetTreeNode(ID);
 
-            var idxNode = MongoContext.GetTreeNode(ID);
-            var tbNode = MongoContext.GetTreeNode(idxNode.PID);
-            var dbNode = MongoContext.GetTreeNode(tbNode.PID);
-            var serverNode = MongoContext.GetTreeNode(dbNode.PID);
-
-            Server = MongoContext.GetMongoObject(serverNode.ID) as MongoServer;
-            Database = MongoContext.GetMongoObject(dbNode.ID) as MongoDatabase;
-            Table = MongoContext.GetMongoObject(tbNode.ID) as MongoCollection;
+            var tbNode = MongoCache.GetTreeNode(idxNode.PID);
+            Table = MongoCache.GetMongoObject(tbNode.ID) as MongoCollection;
+            var dbNode = MongoCache.GetTreeNode(tbNode.PID);
+            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabase;
+            var serverNode = MongoCache.GetTreeNode(dbNode.PID);
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
         }
 
         /// <summary>
@@ -30,8 +29,8 @@ namespace MongoDB.Component
         /// <returns></returns>
         public List<MongoTreeNode> GetFieldNodes()
         {
-            var fieldFiller = MongoContext.GetTreeNodes().Where(n => n.PID == Table.ID && n.Type == MongoTreeNodeType.FieldFiller).First();
-            return MongoContext.GetTreeNodes().Where(n => n.PID == fieldFiller.ID).ToList();
+            var fieldFiller = MongoCache.GetTreeNodes().Where(n => n.PID == Table.ID && n.Type == MongoTreeNodeType.FieldFiller).First();
+            return MongoCache.GetTreeNodes().Where(n => n.PID == fieldFiller.ID).ToList();
         }
 
         /// <summary>
@@ -40,12 +39,12 @@ namespace MongoDB.Component
         /// <returns></returns>
         public List<MongoIndex> GetIndexes()
         {
-            var list = MongoContext.GetTreeNodes().Where(node => node.PID == ID).ToList();
+            var list = MongoCache.GetTreeNodes().Where(node => node.PID == ID).ToList();
 
             var indexes = new List<MongoIndex>();
             foreach (var item in list)
             {
-                indexes.Add(MongoContext.GetMongoObject(item.ID) as MongoIndex);
+                indexes.Add(MongoCache.GetMongoObject(item.ID) as MongoIndex);
             }
             return indexes;
         }
@@ -62,6 +61,8 @@ namespace MongoDB.Component
                 var tbl = db.GetCollection(Table.Name);
                 tbl.MetaData.CreateIndex(doc, model.Unique, model.Background, model.Dropdups);
                 mongo.Disconnect();
+
+                MongoCache.Clear();
             }
         }
 

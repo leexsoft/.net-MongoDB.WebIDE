@@ -12,13 +12,13 @@ namespace MongoDB.Component
         {
             ID = Guid.Parse(id);
 
-            var tbNode = MongoContext.GetTreeNode(ID);
-            var dbNode = MongoContext.GetTreeNode(tbNode.PID);
-            var serverNode = MongoContext.GetTreeNode(dbNode.PID);
+            var tbNode = MongoCache.GetTreeNode(ID);
+            var dbNode = MongoCache.GetTreeNode(tbNode.PID);
+            var serverNode = MongoCache.GetTreeNode(dbNode.PID);
 
-            Server = MongoContext.GetMongoObject(serverNode.ID) as MongoServer;
-            Database = MongoContext.GetMongoObject(dbNode.ID) as MongoDatabase;
-            Table = MongoContext.GetMongoObject(ID) as MongoCollection;
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
+            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabase;
+            Table = MongoCache.GetMongoObject(ID) as MongoCollection;
         }
 
         /// <summary>

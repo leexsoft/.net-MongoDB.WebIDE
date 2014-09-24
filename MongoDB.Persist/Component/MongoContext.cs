@@ -14,13 +14,11 @@ namespace MongoDB.Component
 {
     public class MongoContext
     {
-        private static readonly string ConnString = "Server={0}:{1}";
+        private static readonly string ConnString = "Server={0}";
         private static readonly string IndexTableName = "system.indexes";
-        private static readonly string NodeKey = "TreeNodes_Cache";
-        private static readonly string ObjKey = "MongoObjects_Cache";
 
-        private List<MongoTreeNode> TreeNodes { get; set; }
-        private Dictionary<Guid, object> MongoObjects { get; set; }
+        public List<MongoTreeNode> TreeNodes { get; set; }
+        public Dictionary<Guid, object> MongoObjects { get; set; }
 
         public MongoContext()
         {
@@ -64,7 +62,7 @@ namespace MongoDB.Component
                 var server = obj as MongoServer;
                 if (server != null)
                 {
-                    using (var mongo = new Mongo(string.Format(ConnString, server.IP, server.Port)))
+                    using (var mongo = new Mongo(string.Format(ConnString, server.Name)))
                     {
                         try
                         {
@@ -239,49 +237,6 @@ namespace MongoDB.Component
                     }
                 }
             }
-        }
-
-        public static List<MongoTreeNode> GetTreeNodes()
-        {
-            var nodes = HttpContext.Current.Cache.Get(NodeKey) as List<MongoTreeNode>;
-            if (nodes == null)
-            {
-                var context = new MongoContext();
-                nodes = context.TreeNodes;
-                HttpContext.Current.Cache.Insert(NodeKey, context.TreeNodes, null, DateTime.Now.AddHours(2), Cache.NoSlidingExpiration);
-                HttpContext.Current.Cache.Insert(ObjKey, context.MongoObjects, null, DateTime.Now.AddHours(2), Cache.NoSlidingExpiration);
-            }
-            return nodes;
-        }
-
-        public static MongoTreeNode GetTreeNode(Guid guid)
-        {
-            var list = GetTreeNodes();
-            return list.Find(i => i.ID == guid);
-        }
-
-        public static Dictionary<Guid, object> GetMongoObjects()
-        {
-            var dict = HttpContext.Current.Cache.Get(ObjKey) as Dictionary<Guid, object>;
-            if (dict == null)
-            {
-                var context = new MongoContext();
-                dict = context.MongoObjects;
-                HttpContext.Current.Cache.Insert(NodeKey, context.TreeNodes, null, DateTime.Now.AddHours(2), Cache.NoSlidingExpiration);
-                HttpContext.Current.Cache.Insert(ObjKey, context.MongoObjects, null, DateTime.Now.AddHours(2), Cache.NoSlidingExpiration);
-            }
-            return dict;
-        }
-
-        public static object GetMongoObject(Guid guid)
-        {
-            var dict = GetMongoObjects();
-            object obj;
-            if (dict.TryGetValue(guid, out obj))
-            {
-                return obj;
-            }
-            return null;
         }
     }
 }

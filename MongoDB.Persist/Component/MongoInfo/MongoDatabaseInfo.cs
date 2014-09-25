@@ -13,10 +13,9 @@ namespace MongoDB.Component
             ID = Guid.Parse(id);
 
             var dbNode = MongoCache.GetTreeNode(ID);
-            var serverNode = MongoCache.GetTreeNode(dbNode.PID);
-
-            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
             Database = MongoCache.GetMongoObject(ID) as MongoDatabase;
+            var serverNode = MongoCache.GetTreeNode(dbNode.PID);
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
         }
 
         /// <summary>

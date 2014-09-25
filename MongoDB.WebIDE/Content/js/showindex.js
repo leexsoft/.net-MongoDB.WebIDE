@@ -1,4 +1,28 @@
 ﻿$(document).ready(function () {
+    $('[action]').click(function () {
+        if (window.confirm('确认需要删除此索引吗？')) {
+            var id = $('#hdId').val();
+            var $tr = $(this).closest('tr');
+            var field = $tr.find('td').eq(0).text();
+            $.ajax({
+                url: '/DBAdmin/DeleteIndex/',
+                type: 'POST',
+                cache: false,
+                data: { id: id, name: field },
+                dataType: 'json',
+                success: function (rst) {
+                    alert(rst.Message);
+                    if (rst.Success) {
+                        window.top.location.reload();
+                    }
+                },
+                error: function () {
+                    alert('请求发生异常，请重试');
+                }
+            });
+        }
+    });
+
     $('#btnAddColumn').click(function () {
         var field = $('#selField option:selected').text();
         var orderText = $('#selOrder option:selected').text();
@@ -51,7 +75,7 @@
             success: function (rst) {
                 alert(rst.Message);
                 if (rst.Success) {
-                    window.location.reload();
+                    window.top.location.reload();
                 }
             },
             error: function () {

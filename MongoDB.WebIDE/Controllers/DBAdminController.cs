@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using MongoDB.Component;
 using MongoDB.Defination;
 using MongoDB.Model;
+using MongoDB.Persist.Web.Atrribute;
 using MongoDB.WebIDE.Models;
 using Newtonsoft.Json;
 
-
 namespace MongoDB.WebIDE.Controllers
 {
+    [CacheValid]
     public class DBAdminController : Controller
     {
         #region 查看统计信息
@@ -26,38 +25,17 @@ namespace MongoDB.WebIDE.Controllers
             if (type == (int)MongoTreeNodeType.Server)
             {
                 var server = MongoCache.GetMongoObject(gid) as MongoServer;
-                if (server == null)
-                {
-                    return RedirectToAction("CacheExpire", "Home");
-                }
-                else
-                {
-                    model.Title = server.FullInfo;
-                }
+                model.Title = server.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Database)
             {
                 var database = MongoCache.GetMongoObject(gid) as MongoDatabase;
-                if (database == null)
-                {
-                    return RedirectToAction("CacheExpire", "Home");
-                }
-                else
-                {
-                    model.Title = database.FullInfo;
-                }
+                model.Title = database.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Collection)
             {
                 var table = MongoCache.GetMongoObject(gid) as MongoCollection;
-                if (table == null)
-                {
-                    return RedirectToAction("CacheExpire", "Home");
-                }
-                else
-                {
-                    model.Title = table.FullInfo;
-                }
+                model.Title = table.FullInfo;
             }
 
             //获取数据
@@ -104,6 +82,21 @@ namespace MongoDB.WebIDE.Controllers
             {
                 mongo.CreateIndex(data);
                 return Json(new { Success = true, Message = "索引创建成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DeleteIndex(string id, string name)
+        {
+            var mongo = new MongoIndexContext(id);
+            try
+            {
+                mongo.DeleteIndex(name.Trim());
+                return Json(new { Success = true, Message = "索引删除成功" });
             }
             catch (Exception ex)
             {

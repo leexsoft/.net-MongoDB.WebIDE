@@ -26,6 +26,9 @@
 		<th>
 			<span class="label label-info">是否唯一</span>
 		</th>
+		<th>
+			<span class="label label-info">操作</span>
+		</th>
 	</tr>
 	@{
 		foreach (var item in Model.Indexes)
@@ -51,6 +54,9 @@
 						<input type="checkbox" @(item.Unique ? "checked" : "") disabled />
 					</label>
 				</div>
+			</td>
+			<td>
+				<a action="delete">删除<i class="icon-remove"></i></a>
 			</td>
 		</tr>
 		}

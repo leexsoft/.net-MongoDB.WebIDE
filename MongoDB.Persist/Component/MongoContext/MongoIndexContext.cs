@@ -78,5 +78,20 @@ namespace MongoDB.Component
             }
             return doc;
         }
+
+        public void DeleteIndex(string name)
+        {
+            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
+            {
+                mongo.Connect();
+                var db = mongo.GetDatabase(Database.Name);
+
+                var tbl = db.GetCollection(Table.Name);
+                tbl.MetaData.DropIndex(name);
+                mongo.Disconnect();
+
+                MongoCache.Clear();
+            }
+        }
     }
 }

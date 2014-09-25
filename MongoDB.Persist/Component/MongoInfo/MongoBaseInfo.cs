@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Defination;
-using MongoDB.Driver;
-using MongoDB.Model;
 
 namespace MongoDB.Component
 {
@@ -25,9 +24,9 @@ namespace MongoDB.Component
         /// <param name="list"></param>
         /// <param name="pid"></param>
         /// <param name="doc"></param>
-        protected void BuildTreeNode(List<MongoTreeNode> list, Guid pid, Document doc)
+        protected void BuildTreeNode(List<MongoTreeNode> list, Guid pid, BsonDocument doc)
         {
-            foreach (var key in doc.Keys)
+            foreach (var key in doc.Names)
             {
                 var node = new MongoTreeNode
                 {
@@ -36,11 +35,11 @@ namespace MongoDB.Component
                 };
 
                 var value = doc[key.ToString()];
-                if (value is Document)
+                if (value is BsonDocument)
                 {
                     node.Name = key.ToString();
                     list.Add(node);
-                    BuildTreeNode(list, node.ID, value as Document);
+                    BuildTreeNode(list, node.ID, value as BsonDocument);
                 }
                 else
                 {

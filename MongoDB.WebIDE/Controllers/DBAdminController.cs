@@ -24,17 +24,17 @@ namespace MongoDB.WebIDE.Controllers
             var gid = Guid.Parse(id);
             if (type == (int)MongoTreeNodeType.Server)
             {
-                var server = MongoCache.GetMongoObject(gid) as MongoServer;
+                var server = MongoCache.GetMongoObject(gid) as MongoServerModel;
                 model.Title = server.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Database)
             {
-                var database = MongoCache.GetMongoObject(gid) as MongoDatabase;
+                var database = MongoCache.GetMongoObject(gid) as MongoDatabaseModel;
                 model.Title = database.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Collection)
             {
-                var table = MongoCache.GetMongoObject(gid) as MongoCollection;
+                var table = MongoCache.GetMongoObject(gid) as MongoCollectionModel;
                 model.Title = table.FullInfo;
             }
 
@@ -57,6 +57,21 @@ namespace MongoDB.WebIDE.Controllers
                 Data = mongo.GetData(50)
             };
             return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult Explain(string id, string data)
+        {
+            var mongo = new MongoDataContext(id);
+            try
+            {
+                mongo.CreateIndex(data);
+                return Json(new { Success = true, Message = "索引创建成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
         }
         #endregion
 

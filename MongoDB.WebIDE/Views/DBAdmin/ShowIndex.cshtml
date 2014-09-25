@@ -9,144 +9,156 @@
 <div class="PageTitle">
 	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
-<div class="accordion-heading alert-success mt10">
-	<a class="accordion-toggle">表索引</a>
-</div>
-<table class="table table-bordered table-striped table-hover">
-	<tr>
-		<th>
-			<span class="label label-info">名称</span>
-		</th>
-		<th>
-			<span class="label label-info">命名空间</span>
-		</th>
-		<th>
-			<span class="label label-info">字段</span>
-		</th>
-		<th>
-			<span class="label label-info">是否唯一</span>
-		</th>
-		<th>
-			<span class="label label-info">操作</span>
-		</th>
-	</tr>
-	@{
-		foreach (var item in Model.Indexes)
-		{
-		<tr>
-			<td>
-				@item.Name
-			</td>
-			<td>
-				@item.Namespace
-			</td>
-			<td>
-				@{
-			foreach (var key in item.Keys)
-			{					
-					<span>@key.FieldName : @(key.OrderType == MongoIndexOrderType.Ascending ? "升序" : "降序")</span><br />
-			}
-				}
-			</td>
-			<td>
-				<div class="form-inline">
-					<label class="checkbox inline">
-						<input type="checkbox" @(item.Unique ? "checked" : "") disabled />
-					</label>
-				</div>
-			</td>
-			<td>
-				<a action="delete">删除<i class="icon-remove"></i></a>
-			</td>
-		</tr>
-		}
-	}
-</table>
-<div class="accordion-heading alert-success mt10">
-	<a class="accordion-toggle">索引管理</a>
-</div>
-<div class="alert-info">
-	<div class="form-horizontal pt10">
-		<div class="control-group">
-			<label class="control-label">
-				创建索引:
-			</label>
-			<div class="controls">
-				<select id="selField" class="span2">
-					@{
-						foreach (var field in Model.Fields)
-						{
-						<option>@field.Name</option>
-						}
-					}
-				</select>
-				<select id="selOrder" class="span2">
-					<option value="1">Ascending</option>
-					<option value="-1">Descending</option>
-				</select>
-				<a class="btn btn-primary btn-small" id="btnAddColumn">添加列</a>
-			</div>
+<div class="accordion mt10" id="accordion1">
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">表索引</a>
 		</div>
-	</div>
-	<div class="form-horizontal">
-		<div class="control-group">
-			<div class="controls">
-				<table class="table-bordered table-hover" id="tblColumn">
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner">
+				<table class="table table-bordered table-striped table-hover">
 					<tr>
 						<th>
-							<span class="label label-info">列名</span>
+							<span class="label label-info">名称</span>
 						</th>
 						<th>
-							<span class="label label-info">排序</span>
+							<span class="label label-info">命名空间</span>
+						</th>
+						<th>
+							<span class="label label-info">字段</span>
+						</th>
+						<th>
+							<span class="label label-info">是否唯一</span>
 						</th>
 						<th>
 							<span class="label label-info">操作</span>
 						</th>
 					</tr>
+					@{
+						foreach (var item in Model.Indexes)
+						{
+						<tr>
+							<td>
+								@item.Name
+							</td>
+							<td>
+								@item.Namespace
+							</td>
+							<td>
+								@{
+							foreach (var key in item.Keys)
+							{					
+									<span>@key.FieldName : @(key.OrderType == MongoIndexOrderType.Ascending ? "升序" : "降序")</span><br />
+							}
+								}
+							</td>
+							<td>
+								<div class="form-inline">
+									<label class="checkbox inline">
+										<input type="checkbox" @(item.Unique ? "checked" : "") disabled />
+									</label>
+								</div>
+							</td>
+							<td>
+								<a action="delete">删除<i class="icon-remove"></i></a>
+							</td>
+						</tr>
+						}
+					}
 				</table>
 			</div>
 		</div>
 	</div>
-	<div class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label">
-				索引属性:
-			</label>
-			<div class="controls">
-				<label class="checkbox">
-					<input id="cbUnique" type="checkbox" />是否唯一索引
-				</label>
-			</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">索引管理</a>
 		</div>
-	</div>
-	<div class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label">
-				后台创建:
-			</label>
-			<div class="controls">
-				<label class="checkbox">
-					<input id="cbBackground" type="checkbox" />索引创建过程会阻塞其它数据库操作，因此建议设为以后台方式创建索引
-				</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label">
-				删除重复:
-			</label>
-			<div class="controls">
-				<label class="checkbox">
-					<input id="cbDropDups" type="checkbox" />在有重复值的字段上创建唯一索引时，系统会自动保留出现重复值的第一条记录
-				</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-horizontal pb10">
-		<div class="control-group">
-			<div class="controls">
-				<a class="btn btn-primary btn-small" id="btnCreate">生成索引</a>
+		<div id="collapseTwo" class="accordion-body collapse alert-info">
+			<div class="accordion-inner">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							创建索引:
+						</label>
+						<div class="controls">
+							<select id="selField" class="span2">
+								@{
+									foreach (var field in Model.Fields)
+									{
+									<option>@field.Name</option>
+									}
+								}
+							</select>
+							<select id="selOrder" class="span2">
+								<option value="1">Ascending</option>
+								<option value="-1">Descending</option>
+							</select>
+							<a class="btn btn-primary btn-small" id="btnAddColumn">添加列</a>
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<div class="controls">
+							<table class="table-bordered table-hover" id="tblColumn">
+								<tr>
+									<th>
+										<span class="label label-info">列名</span>
+									</th>
+									<th>
+										<span class="label label-info">排序</span>
+									</th>
+									<th>
+										<span class="label label-info">操作</span>
+									</th>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							索引属性:
+						</label>
+						<div class="controls">
+							<label class="checkbox">
+								<input id="cbUnique" type="checkbox" />是否唯一索引
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							后台创建:
+						</label>
+						<div class="controls">
+							<label class="checkbox">
+								<input id="cbBackground" type="checkbox" />索引创建过程会阻塞其它数据库操作，因此建议设为以后台方式创建索引
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							删除重复:
+						</label>
+						<div class="controls">
+							<label class="checkbox">
+								<input id="cbDropDups" type="checkbox" />在有重复值的字段上创建唯一索引时，系统会自动保留出现重复值的第一条记录
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<div class="controls">
+							<a class="btn btn-primary btn-small" id="btnCreate">生成索引</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

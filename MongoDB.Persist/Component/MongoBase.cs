@@ -11,8 +11,8 @@ namespace MongoDB.Component
         protected readonly string ConnString = "Server={0}";
         
         protected Guid ID { get; set; }
-        public MongoServer Server { get; set; }
-        public MongoDatabase Database { get; set; }
-        public MongoCollection Table { get; set; }
+        public MongoServerModel Server { get; set; }
+        public MongoDatabaseModel Database { get; set; }
+        public MongoCollectionModel Table { get; set; }
     }
 }

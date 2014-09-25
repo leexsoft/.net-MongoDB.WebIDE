@@ -13,12 +13,12 @@ namespace MongoDB.Component
             var guid = Guid.Parse(id);
 
             var dbNode = MongoCache.GetTreeNode(guid);
+            Database = MongoCache.GetMongoObject(guid) as MongoDatabaseModel;
             var serverNode = MongoCache.GetTreeNode(dbNode.PID);
-
-            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
-            Database = MongoCache.GetMongoObject(guid) as MongoDatabase;
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
+        /*
         public int GetProfileStatus()
         {
             using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
@@ -37,5 +37,6 @@ namespace MongoDB.Component
                 return 0;
             }
         }
+         * */
     }
 }

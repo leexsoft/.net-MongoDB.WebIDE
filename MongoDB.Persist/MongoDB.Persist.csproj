@@ -31,9 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MongoDB.Driver, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.9.2.235, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MongoDB.Driver.1.0.0.0\lib\net40\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -48,6 +51,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\MongoDocument.cs" />
     <Compile Include="Component\MongoInfoFactory.cs" />
     <Compile Include="Component\MongoContext.cs" />
     <Compile Include="Component\MongoInfo\MongoServerInfo.cs" />
@@ -63,13 +67,15 @@
     <Compile Include="Defination\MongoTreeNode.cs" />
     <Compile Include="Defination\MongoTreeNodeType.cs" />
     <Compile Include="Defination\MongoIndexOrderType.cs" />
-    <Compile Include="Model\MongoDatabase.cs" />
-    <Compile Include="Model\MongoCollection.cs" />
-    <Compile Include="Model\MongoFiled.cs" />
-    <Compile Include="Model\MongoIndex.cs" />
+    <Compile Include="Defination\MongoConst.cs" />
+    <Compile Include="Extension\MongoExtension.cs" />
+    <Compile Include="Model\MongoDatabaseModel.cs" />
+    <Compile Include="Model\MongoCollectionModel.cs" />
+    <Compile Include="Model\MongoFiledModel.cs" />
+    <Compile Include="Model\MongoIndexModel.cs" />
     <Compile Include="Model\SaveIndexModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\MongoServer.cs" />
+    <Compile Include="Model\MongoServerModel.cs" />
     <Compile Include="Web\Atrribute\CacheValidAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace MongoDB.Model
     /// <summary>
     /// 索引器信息
     /// </summary>
-    public class MongoIndex
+    public class MongoIndexModel
     {
         /// <summary>
         /// 唯一值

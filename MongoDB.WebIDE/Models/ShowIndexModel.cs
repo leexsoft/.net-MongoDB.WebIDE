@@ -12,6 +12,6 @@ namespace MongoDB.WebIDE.Models
 
         public List<MongoTreeNode> Fields { get; set; }
 
-        public List<MongoIndex> Indexes { get; set; }
+        public List<MongoIndexModel> Indexes { get; set; }
     }
 }

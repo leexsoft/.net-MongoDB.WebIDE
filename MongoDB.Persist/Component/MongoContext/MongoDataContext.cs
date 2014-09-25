@@ -4,6 +4,7 @@ using MongoDB.Defination;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using MongoDB.Bson;
 
 namespace MongoDB.Component
 {
@@ -15,11 +16,11 @@ namespace MongoDB.Component
             var fieldNode = MongoCache.GetTreeNode(ID);
 
             var tbNode = MongoCache.GetTreeNode(fieldNode.PID);
-            Table = MongoCache.GetMongoObject(tbNode.ID) as MongoCollection;
+            Table = MongoCache.GetMongoObject(tbNode.ID) as MongoCollectionModel;
             var dbNode = MongoCache.GetTreeNode(tbNode.PID);
-            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabase;
+            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabaseModel;
             var serverNode = MongoCache.GetTreeNode(dbNode.PID);
-            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
         public List<MongoTreeNode> GetFieldNodes()
@@ -27,16 +28,15 @@ namespace MongoDB.Component
             return MongoCache.GetTreeNodes().Where(n => n.PID == ID).ToList();
         }
 
-        public List<Document> GetData(int limit)
+        public List<BsonDocument> GetData(int limit)
         {
-            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
-            {
-                mongo.Connect();
-                var db = mongo.GetDatabase(Database.Name);
+            var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
+            var server = mongo.GetServer();
+            var db = server.GetDatabase(Database.Name);
 
-                var query = db.GetCollection(Table.Name).FindAll().Limit(limit);
-                return query.Documents.ToList();
-            }
+            var query = db.GetCollection(Table.Name).FindAll();
+            query.Limit = limit;
+            return query.ToList();
         }
     }
 }

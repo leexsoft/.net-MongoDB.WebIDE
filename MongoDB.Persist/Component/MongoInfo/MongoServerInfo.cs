@@ -11,7 +11,7 @@ namespace MongoDB.Component
         public MongoServerInfo(string id)
         {
             ID = Guid.Parse(id);
-            Server = MongoCache.GetMongoObject(ID) as MongoServer;
+            Server = MongoCache.GetMongoObject(ID) as MongoServerModel;
         }
 
         /// <summary>
@@ -20,21 +20,14 @@ namespace MongoDB.Component
         /// <returns></returns>
         public override List<MongoTreeNode> GetInfo()
         {
-            var list = new List<MongoTreeNode>();
-            if (Server == null)
-            {
-                return list;
-            }
+            var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
+            var server = mongo.GetServer();
+            var adminDB = server.GetDatabase(MongoConst.AdminDBName);
+            var doc = adminDB.SendCommand(MongoDocument.CreateCommandQuery("serverStatus", 1));
 
-            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
-            {
-                mongo.Connect();
-                var admindb = mongo.GetDatabase("admin");
-                var doc = admindb.SendCommand(new Document().Append("serverStatus", 1));
-                
-                BuildTreeNode(list, Guid.Empty, doc);
-                return list;
-            }
+            var list = new List<MongoTreeNode>();
+            BuildTreeNode(list, Guid.Empty, doc);
+            return list;
         }
     }
 }

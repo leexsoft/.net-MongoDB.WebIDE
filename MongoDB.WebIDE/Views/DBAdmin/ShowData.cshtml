@@ -4,31 +4,59 @@
 <div class="PageTitle">
 	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
-<div class="accordion-heading alert-success mt10">
-	<a class="accordion-toggle">表数据</a>
+<div class="accordion mt10" id="accordion1">
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">表数据</a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner">
+				<table class="table table-bordered table-striped table-hover">
+					<tr>
+						@{
+							foreach (var item in Model.Fields)
+							{
+							<th>
+								<span class="label label-info">@item.Name</span>
+							</th>
+							}
+						}
+					</tr>
+					@{
+						foreach (var doc in Model.Data)
+						{
+						<tr>
+							@foreach (var item in Model.Fields)
+	   {
+								<td>
+									@doc[item.Name]
+								</td>
+	   }
+						</tr>
+						}
+					}
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">执行计划</a>
+		</div>
+		<div id="collapseTwo" class="accordion-body collapse alert-info">
+			<div class="accordion-inner">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							find:
+						</label>
+						<div class="controls">
+							<input type="text" class="input-large" id="txtFind" />
+							<a class="btn btn-primary btn-small" id="btnAddColumn">执行</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<table class="table table-bordered table-striped table-hover">
-	<tr>
-		@{
-			foreach (var item in Model.Fields)
-			{
-			<th>
-				<span class="label label-info">@item.Name</span>
-			</th>
-			}
-		}
-	</tr>
-	@{
-		foreach (var doc in Model.Data)
-		{
-		<tr>
-			@foreach (var item in Model.Fields)
-   {
-				<td>
-					@doc[item.Name]
-				</td>
-   }
-		</tr>
-		}
-	}
-</table>

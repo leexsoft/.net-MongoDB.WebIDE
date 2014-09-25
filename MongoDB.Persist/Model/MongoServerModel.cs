@@ -8,7 +8,7 @@ namespace MongoDB.Model
     /// <summary>
     /// 服务器信息
     /// </summary>
-    public class MongoServer
+    public class MongoServerModel
     {
         /// <summary>
         /// 唯一值

@@ -13,11 +13,11 @@ namespace MongoDB.Component
             ID = Guid.Parse(id);
 
             var tbNode = MongoCache.GetTreeNode(ID);
-            Table = MongoCache.GetMongoObject(ID) as MongoCollection;
+            Table = MongoCache.GetMongoObject(ID) as MongoCollectionModel;
             var dbNode = MongoCache.GetTreeNode(tbNode.PID);
-            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabase;
+            Database = MongoCache.GetMongoObject(dbNode.ID) as MongoDatabaseModel;
             var serverNode = MongoCache.GetTreeNode(dbNode.PID);
-            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServer;
+            Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
         /// <summary>
@@ -26,21 +26,14 @@ namespace MongoDB.Component
         /// <returns></returns>
         public override List<MongoTreeNode> GetInfo()
         {
-            var list = new List<MongoTreeNode>();
-            if (Server == null || Database == null)
-            {
-                return list;
-            }
+            var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
+            var server = mongo.GetServer();
+            var adminDB = server.GetDatabase(MongoConst.AdminDBName);
+            var doc = adminDB.SendCommand(MongoDocument.CreateCommandQuery("collstats", Table.Name));
 
-            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
-            {
-                mongo.Connect();
-                var db = mongo.GetDatabase(Database.Name);
-                var doc = db.SendCommand(new Document().Append("collstats", Table.Name));
-                
-                BuildTreeNode(list, Guid.Empty, doc);
-                return list;
-            }
+            var list = new List<MongoTreeNode>();
+            BuildTreeNode(list, Guid.Empty, doc);
+            return list;
         }
     }
 }

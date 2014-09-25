@@ -8,7 +8,7 @@ namespace MongoDB.Model
     /// <summary>
     /// 表列名信息
     /// </summary>
-    public class MongoField
+    public class MongoFieldModel
     {
         /// <summary>
         /// 唯一值

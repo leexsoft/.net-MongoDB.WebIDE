@@ -9,14 +9,12 @@ using MongoDB.Defination;
 using MongoDB.Driver;
 using MongoDB.Model;
 using System.Xml.Linq;
+using MongoDB.Bson;
 
 namespace MongoDB.Component
 {
     public class MongoContext
     {
-        private static readonly string ConnString = "Server={0}";
-        private static readonly string IndexTableName = "system.indexes";
-
         public List<MongoTreeNode> TreeNodes { get; set; }
         public Dictionary<Guid, object> MongoObjects { get; set; }
 
@@ -33,7 +31,7 @@ namespace MongoDB.Component
             var xml = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/servers.config"));
             xml.Descendants("Server").ToList().ForEach(item =>
             {
-                var server = new MongoServer
+                var serverModel = new MongoServerModel
                 {
                     ID = Guid.NewGuid(),
                     IP = item.Attribute("IP").Value,
@@ -42,13 +40,13 @@ namespace MongoDB.Component
 
                 TreeNodes.Add(new MongoTreeNode
                 {
-                    ID = server.ID,
+                    ID = serverModel.ID,
                     PID = Guid.Empty,
-                    Name = server.Name,
+                    Name = serverModel.Name,
                     Type = MongoTreeNodeType.Server
                 });
 
-                MongoObjects.Add(server.ID, server);
+                MongoObjects.Add(serverModel.ID, serverModel);
             });
 
             Parallel.ForEach(TreeNodes, node => GetServerDB(node));
@@ -59,56 +57,55 @@ namespace MongoDB.Component
             object obj;
             if (MongoObjects.TryGetValue(node.ID, out obj))
             {
-                var server = obj as MongoServer;
-                if (server != null)
+                var serverModel = obj as MongoServerModel;
+                if (serverModel != null)
                 {
-                    using (var mongo = new Mongo(string.Format(ConnString, server.Name)))
+                    try
                     {
-                        try
+                        var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
+                        serverModel.IsOK = true;
+
+                        var server = mongo.GetServer();
+                        var adminDB = server.GetDatabase(MongoConst.AdminDBName);
+                        var dbDoc = adminDB.SendCommand(MongoDocument.CreateCommandQuery("listDatabases", 1));
+                        serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
+
+                        var dbList = dbDoc["databases"].AsBsonArray;
+                        if (dbList != null)
                         {
-                            mongo.Connect();
-                            server.IsOK = true;
-
-                            var adminDB = mongo.GetDatabase("admin");
-                            var dbDoc = adminDB.SendCommand(new Document().Append("listDatabases", 1));
-                            server.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
-
-                            var dbList = dbDoc["databases"] as List<Document>;
-                            if (dbList != null)
+                            dbList.AsParallel().ForAll(item =>
                             {
-                                dbList.ForEach(item =>
+                                var db = new MongoDatabaseModel
                                 {
-                                    var db = new MongoDatabase
-                                    {
-                                        ID = Guid.NewGuid(),
-                                        Name = item["name"].ToString(),
-                                        Size = Convert.ToInt64(item["sizeOnDisk"])
-                                    };
+                                    ID = Guid.NewGuid(),
+                                    Name = item["name"].ToString(),
+                                    Size = Convert.ToInt64(item["sizeOnDisk"])
+                                };
 
-                                    TreeNodes.Add(new MongoTreeNode
-                                    {
-                                        ID = db.ID,
-                                        PID = server.ID,
-                                        Name = db.Name,
-                                        Type = MongoTreeNodeType.Database
-                                    });
-
-                                    MongoObjects.Add(db.ID, db);
+                                TreeNodes.Add(new MongoTreeNode
+                                {
+                                    ID = db.ID,
+                                    PID = serverModel.ID,
+                                    Name = db.Name,
+                                    Type = MongoTreeNodeType.Database
                                 });
 
-                                var dbs = TreeNodes.Where(n => n.PID == server.ID).ToList();
-                                Parallel.ForEach(dbs, db => GetDBCollection(mongo, db));
-                            }
+                                MongoObjects.Add(db.ID, db);
+                            });
+
+                            var dbs = TreeNodes.Where(n => n.PID == serverModel.ID).ToList();
+                            //Parallel.ForEach(dbs, db => GetDBCollection(mongo, db));
                         }
-                        catch (Exception ex)
-                        {
-                            server.IsOK = false;
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        serverModel.IsOK = false;
                     }
                 }
             }
         }
 
+        /*
         private void GetDBCollection(Mongo mongo, MongoTreeNode node)
         {
             object obj;
@@ -172,7 +169,7 @@ namespace MongoDB.Component
                     {
                         foreach (var item in doc.Keys)
                         {
-                            var field = new MongoField
+                            var field = new MongoFieldModel
                             {
                                 ID = Guid.NewGuid(),
                                 Name = item.ToString()
@@ -206,7 +203,7 @@ namespace MongoDB.Component
                     {
                         foreach (var idx in indexes.Documents)
                         {
-                            var index = new MongoIndex
+                            var index = new MongoIndexModel
                             {
                                 ID = Guid.NewGuid(),
                                 Name = idx["name"].ToString(),
@@ -238,5 +235,6 @@ namespace MongoDB.Component
                 }
             }
         }
+         * */
     }
 }

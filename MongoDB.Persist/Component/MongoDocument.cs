@@ -8,7 +8,7 @@ namespace MongoDB.Component
     /// </summary>
     internal static class MongoDocument
     {
-        public static QueryDocument CreateCommandQuery(string command, BsonValue value)
+        public static QueryDocument CreateQuery(string command, BsonValue value)
         {
             var query = new QueryDocument();
             query.Add(command, value);

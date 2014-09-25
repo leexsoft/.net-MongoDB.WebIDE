@@ -63,11 +63,11 @@ namespace MongoDB.Component
                     try
                     {
                         var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
-                        serverModel.IsOK = true;
-
                         var server = mongo.GetServer();
                         var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-                        var dbDoc = adminDB.SendCommand(MongoDocument.CreateCommandQuery("listDatabases", 1));
+                        var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
+                        
+                        serverModel.IsOK = true;
                         serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
 
                         var dbList = dbDoc["databases"].AsBsonArray;
@@ -94,7 +94,8 @@ namespace MongoDB.Component
                             });
 
                             var dbs = TreeNodes.Where(n => n.PID == serverModel.ID).ToList();
-                            //Parallel.ForEach(dbs, db => GetDBCollection(mongo, db));
+                            GetDBCollection(server, dbs[0]);
+                            //Parallel.ForEach(dbs, db => GetDBCollection(server, db));
                         }
                     }
                     catch (Exception ex)
@@ -105,22 +106,22 @@ namespace MongoDB.Component
             }
         }
 
-        /*
-        private void GetDBCollection(Mongo mongo, MongoTreeNode node)
+
+        private void GetDBCollection(MongoServer server, MongoTreeNode node)
         {
             object obj;
             if (MongoObjects.TryGetValue(node.ID, out obj))
             {
-                var database = obj as MongoDatabase;
+                var database = obj as MongoDatabaseModel;
                 if (database != null)
                 {
-                    var db = mongo.GetDatabase(database.Name);
+                    var db = server.GetDatabase(database.Name);
                     var collections = db.GetCollectionNames();
                     if (collections != null)
                     {
-                        collections.Where(t => !t.Contains("$") && !t.Contains(IndexTableName)).ToList().ForEach(t =>
+                        collections.Where(t => !t.Contains("$") && !t.Contains(MongoConst.IndexTableName)).ToList().ForEach(t =>
                         {
-                            var tbl = new MongoCollection
+                            var tbl = new MongoCollectionModel
                             {
                                 ID = Guid.NewGuid(),
                                 Namespace = t,
@@ -145,12 +146,13 @@ namespace MongoDB.Component
             }
         }
 
-        private void GetCollectionInfo(Database db, MongoTreeNode node)
+        
+        private void GetCollectionInfo(MongoDatabase db, MongoTreeNode node)
         {
             object obj;
             if (MongoObjects.TryGetValue(node.ID, out obj))
             {
-                var table = obj as MongoCollection;
+                var table = obj as MongoCollectionModel;
                 if (table != null)
                 {
                     //字段类型信息节点
@@ -164,10 +166,10 @@ namespace MongoDB.Component
                     TreeNodes.Add(fieldNode);
 
                     //字段节点
-                    var doc = db[table.Name].FindOne(new Document());
+                    var doc = db[table.Name].FindOne();
                     if (doc != null)
                     {
-                        foreach (var item in doc.Keys)
+                        foreach (var item in doc.Names)
                         {
                             var field = new MongoFieldModel
                             {
@@ -198,10 +200,10 @@ namespace MongoDB.Component
                     TreeNodes.Add(indexNode);
 
                     //索引节点
-                    var indexes = db[IndexTableName].Find(new Document().Append("ns", table.Namespace));
+                    var indexes = db[MongoConst.IndexTableName].Find(MongoDocument.CreateQuery("ns", table.Namespace));
                     if (indexes != null)
                     {
-                        foreach (var idx in indexes.Documents)
+                        foreach (var idx in indexes.ToList())
                         {
                             var index = new MongoIndexModel
                             {
@@ -211,8 +213,8 @@ namespace MongoDB.Component
                                 Unique = Convert.ToBoolean(idx["unique"]),
                                 Keys = new List<MongoIndexKey>()
                             };
-                            var docFields = idx["key"] as Document;
-                            foreach (var key in docFields.Keys)
+                            var docFields = idx["key"].AsBsonDocument;
+                            foreach (var key in docFields.Names)
                             {
                                 index.Keys.Add(new MongoIndexKey
                                 {
@@ -235,6 +237,5 @@ namespace MongoDB.Component
                 }
             }
         }
-         * */
     }
 }

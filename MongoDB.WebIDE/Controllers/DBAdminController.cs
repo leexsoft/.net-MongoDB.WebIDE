@@ -65,7 +65,7 @@ namespace MongoDB.WebIDE.Controllers
             var mongo = new MongoDataContext(id);
             try
             {
-                mongo.CreateIndex(data);
+                //mongo.CreateIndex(data);
                 return Json(new { Success = true, Message = "索引创建成功" });
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace MongoDB.WebIDE.Controllers
             var mongo = new MongoProfileContext(id);
             var model = new ProfileInfoModel
             {
-                Status = mongo.GetProfileStatus()
+                Status = 0 //mongo.GetProfileStatus()
             };
             return Json(model);
         }

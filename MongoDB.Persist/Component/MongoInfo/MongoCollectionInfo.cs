@@ -29,7 +29,7 @@ namespace MongoDB.Component
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-            var doc = adminDB.SendCommand(MongoDocument.CreateCommandQuery("collstats", Table.Name));
+            var doc = adminDB.SendCommand(MongoDocument.CreateQuery("collstats", Table.Name));
 
             var list = new List<MongoTreeNode>();
             BuildTreeNode(list, Guid.Empty, doc);

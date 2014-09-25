@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Defination;
-using MongoDB.Driver;
 
 namespace MongoDB.WebIDE.Models
 {
@@ -10,6 +10,6 @@ namespace MongoDB.WebIDE.Models
 
         public List<MongoTreeNode> Fields { get; set; }
 
-        public List<Document> Data { get; set; }
+        public List<BsonDocument> Data { get; set; }
     }
 }

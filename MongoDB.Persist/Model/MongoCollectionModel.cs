@@ -23,8 +23,12 @@ namespace MongoDB.Model
         /// </summary>
         public string Namespace { get; set; }
         /// <summary>
+        /// 数据总数
+        /// </summary>
+        public long TotalCount { get; set; }
+        /// <summary>
         /// 全信息
         /// </summary>
-        public string FullInfo { get { return string.Format("数据表：{0} | 命名空间：{1}", Name, Namespace); } }
+        public string FullInfo { get { return string.Format("数据表：{0} | 数据总数：{1}", Name, TotalCount); } }
     }
 }

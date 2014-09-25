@@ -66,7 +66,7 @@ namespace MongoDB.Component
                         var server = mongo.GetServer();
                         var adminDB = server.GetDatabase(MongoConst.AdminDBName);
                         var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
-                        
+
                         serverModel.IsOK = true;
                         serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
 
@@ -95,7 +95,7 @@ namespace MongoDB.Component
 
                             var dbs = TreeNodes.Where(n => n.PID == serverModel.ID).ToList();
                             GetDBCollection(server, dbs[0]);
-                            //Parallel.ForEach(dbs, db => GetDBCollection(server, db));
+                            Parallel.ForEach(dbs, db => GetDBCollection(server, db));
                         }
                     }
                     catch (Exception ex)
@@ -121,18 +121,20 @@ namespace MongoDB.Component
                     {
                         collections.Where(t => !t.Contains("$") && !t.Contains(MongoConst.IndexTableName)).ToList().ForEach(t =>
                         {
+                            var table = db.GetCollection(t);
                             var tbl = new MongoCollectionModel
                             {
                                 ID = Guid.NewGuid(),
-                                Namespace = t,
-                                Name = t.Substring(t.IndexOf(".")).TrimStart('.')
+                                Name = t,
+                                Namespace = table.FullName,
+                                TotalCount = table.Count()
                             };
 
                             TreeNodes.Add(new MongoTreeNode
                             {
                                 ID = tbl.ID,
                                 PID = database.ID,
-                                Name = tbl.Name,
+                                Name = string.Format("{0} ({1})", tbl.Name, tbl.TotalCount),
                                 Type = MongoTreeNodeType.Collection
                             });
 
@@ -146,7 +148,7 @@ namespace MongoDB.Component
             }
         }
 
-        
+
         private void GetCollectionInfo(MongoDatabase db, MongoTreeNode node)
         {
             object obj;

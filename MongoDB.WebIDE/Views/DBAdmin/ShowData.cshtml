@@ -2,80 +2,93 @@
 @using MongoDB.Defination
 @model ShowDataModel	
 @section style{
-	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
+    <link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
 }
 @section script{
-	<script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
-	<script src="@Url.Content("~/Content/js/showdata.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/showdata.js")" type="text/javascript"></script>
 }
 <input type="hidden" value="@Model.ID" id="hdId"/>
 <div class="PageTitle">
-	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
+    <i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
 <div class="accordion mt10" id="accordion1">
-	<div class="accordion-group">
-		<div class="accordion-heading alert-success">
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">表数据</a>
-		</div>
-		<div id="collapseOne" class="accordion-body collapse in">
-			<div class="accordion-inner datatable">
-				<table class="table table-bordered table-striped table-hover">
-					<tr>
-						@{
-							foreach (var name in Model.Data[0].Names)
-							{
-							<th>
-								<span class="label label-info">@name</span>
-							</th>
-							}
-						}
-					</tr>
-					@{
-						foreach (var doc in Model.Data)
-						{
-						<tr>
-							@{
-							foreach (var name in doc.Names)
-							{
-								<td>
-									@doc[name]
-								</td>
-							}}
-						</tr>
-						}
-					}
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="accordion-group">
-		<div class="accordion-heading alert-success">
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">执行计划</a>
-		</div>
-		<div id="collapseTwo" class="accordion-body collapse alert-info">
-			<div class="accordion-inner">
-				<div class="form-horizontal">
-					<div class="control-group">
-						<label class="control-label">
-							find:
-						</label>
-						<div class="controls">
-							<select id="selField" class="span2">
-								@{
-									foreach (var field in Model.Fields)
-									{
-									<option>@field.Name</option>
-									}
-								}
-							</select>
-							<input type="text" class="input-large" id="txtFind" />
-							<a class="btn btn-primary btn-small" id="btnExplain">执行</a>
-						</div>
-					</div>
-				</div>
-				<ul id="explaintree" class="ztree">
-				</ul>
-			</div>
-		</div>
-	</div>
+    <div class="accordion-group">
+        <div class="accordion-heading alert-success">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">表数据</a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse in">
+            <div class="accordion-inner datatable">
+                <table class="table table-bordered table-striped table-hover">
+                    <tr>
+                        @{
+                            foreach (var name in Model.Data[0].Names)
+                            {
+                            <th>
+                                <span class="label label-info">@name</span>
+                            </th>
+                            }
+                        }
+                    </tr>
+                    @{
+                        foreach (var doc in Model.Data)
+                        {
+                        <tr>
+                            @{
+                            foreach (var name in doc.Names)
+                            {
+                                <td>
+                                    @{
+                                if (doc[name].IsBsonDocument)
+                                {
+                                        <text>document</text>
+                                }
+                                else if (doc[name].IsBsonDateTime)
+                                {
+                                        @doc[name].ToLocalTime()
+                                }
+                                else
+                                {
+                                        @doc[name]
+                                }
+                                    }
+                                </td>
+                            }}
+                        </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading alert-success">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">执行计划</a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse alert-info">
+            <div class="accordion-inner">
+                <div class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">
+                            find:
+                        </label>
+                        <div class="controls">
+                            <select id="selField" class="span2">
+                                @{
+                                    foreach (var field in Model.Fields)
+                                    {
+                                    <option>@field.Name</option>
+                                    }
+                                }
+                            </select>
+                            <input type="text" class="input-large" id="txtFind" />
+                            <a class="btn btn-primary btn-small" id="btnExplain">执行</a>
+                        </div>
+                    </div>
+                </div>
+                <ul id="explaintree" class="ztree">
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

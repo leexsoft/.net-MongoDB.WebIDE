@@ -3,31 +3,31 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Caching;
+using System.Xml.Linq;
 using MongoDB.Defination;
 using MongoDB.Driver;
 using MongoDB.Model;
-using System.Xml.Linq;
-using MongoDB.Bson;
+using System.Collections;
+using log4net;
 
 namespace MongoDB.Component
 {
     public class MongoContext
     {
-        public List<MongoTreeNode> TreeNodes { get; set; }
-        public Dictionary<Guid, object> MongoObjects { get; set; }
+        public HashSet<MongoTreeNode> TreeNodes { get; set; }
+        public Hashtable MongoObjects { get; set; }
 
         public MongoContext()
         {
-            TreeNodes = new List<MongoTreeNode>();
-            MongoObjects = new Dictionary<Guid, object>();
+            TreeNodes = new HashSet<MongoTreeNode>();
+            MongoObjects = Hashtable.Synchronized(new Hashtable());
 
             GetServerDetail();
         }
 
         private void GetServerDetail()
         {
+            var serverNodes = new HashSet<Guid>();
             var xml = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/servers.config"));
             xml.Descendants("Server").ToList().ForEach(item =>
             {
@@ -38,6 +38,10 @@ namespace MongoDB.Component
                     Port = item.Attribute("Port").Value
                 };
 
+                //用来做并行计算的临时集合
+                serverNodes.Add(serverModel.ID);
+
+                //树节点
                 TreeNodes.Add(new MongoTreeNode
                 {
                     ID = serverModel.ID,
@@ -46,79 +50,78 @@ namespace MongoDB.Component
                     Type = MongoTreeNodeType.Server
                 });
 
+                //对象节点
                 MongoObjects.Add(serverModel.ID, serverModel);
             });
 
-            Parallel.ForEach(TreeNodes, node => GetServerDB(node));
+            Parallel.ForEach(serverNodes, id => GetServerDB(id));
         }
 
-        private void GetServerDB(MongoTreeNode node)
+        private void GetServerDB(Guid guid)
         {
-            object obj;
-            if (MongoObjects.TryGetValue(node.ID, out obj))
+            if (MongoObjects.ContainsKey(guid))
             {
-                var serverModel = obj as MongoServerModel;
-                if (serverModel != null)
+                var serverModel = MongoObjects[guid] as MongoServerModel;
+                try
                 {
-                    try
+                    var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
+                    var server = mongo.GetServer();
+                    var adminDB = server.GetDatabase(MongoConst.AdminDBName);
+                    var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
+
+                    serverModel.IsOK = true;
+                    serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
+
+                    var dbNodes = new HashSet<Guid>();
+                    var dbList = dbDoc["databases"].AsBsonArray;
+                    if (dbList != null)
                     {
-                        var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
-                        var server = mongo.GetServer();
-                        var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-                        var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
-
-                        serverModel.IsOK = true;
-                        serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
-
-                        var dbList = dbDoc["databases"].AsBsonArray;
-                        if (dbList != null)
+                        dbList.AsParallel().ForAll(item =>
                         {
-                            dbList.AsParallel().ForAll(item =>
+                            var db = new MongoDatabaseModel
                             {
-                                var db = new MongoDatabaseModel
-                                {
-                                    ID = Guid.NewGuid(),
-                                    Name = item["name"].ToString(),
-                                    Size = Convert.ToInt64(item["sizeOnDisk"])
-                                };
+                                ID = Guid.NewGuid(),
+                                Name = item["name"].ToString(),
+                                Size = Convert.ToInt64(item["sizeOnDisk"])
+                            };
 
-                                TreeNodes.Add(new MongoTreeNode
-                                {
-                                    ID = db.ID,
-                                    PID = serverModel.ID,
-                                    Name = db.Name,
-                                    Type = MongoTreeNodeType.Database
-                                });
+                            dbNodes.Add(db.ID);
 
-                                MongoObjects.Add(db.ID, db);
+                            TreeNodes.Add(new MongoTreeNode
+                            {
+                                ID = db.ID,
+                                PID = serverModel.ID,
+                                Name = db.Name,
+                                Type = MongoTreeNodeType.Database
                             });
 
-                            var dbs = TreeNodes.Where(n => n.PID == serverModel.ID).ToList();
-                            GetDBCollection(server, dbs[0]);
-                            Parallel.ForEach(dbs, db => GetDBCollection(server, db));
-                        }
+                            MongoObjects.Add(db.ID, db);
+                        });
+
+                        Parallel.ForEach(dbNodes, id => GetDBCollection(server, id));
                     }
-                    catch (Exception ex)
-                    {
-                        serverModel.IsOK = false;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetLogger("MongoContext").Error("获取数据库信息时出错", ex);
+                    serverModel.IsOK = false;
                 }
             }
         }
 
-
-        private void GetDBCollection(MongoServer server, MongoTreeNode node)
+        private void GetDBCollection(MongoServer server, Guid guid)
         {
-            object obj;
-            if (MongoObjects.TryGetValue(node.ID, out obj))
+            if (MongoObjects.ContainsKey(guid))
             {
-                var database = obj as MongoDatabaseModel;
-                if (database != null)
+                var database = MongoObjects[guid] as MongoDatabaseModel;
+
+                try
                 {
                     var db = server.GetDatabase(database.Name);
                     var collections = db.GetCollectionNames();
                     if (collections != null)
                     {
+                        var tblNodes = new HashSet<Guid>();
                         collections.Where(t => !t.Contains("$") && !t.Contains(MongoConst.IndexTableName)).ToList().ForEach(t =>
                         {
                             var table = db.GetCollection(t);
@@ -129,6 +132,8 @@ namespace MongoDB.Component
                                 Namespace = table.FullName,
                                 TotalCount = table.Count()
                             };
+
+                            tblNodes.Add(tbl.ID);
 
                             TreeNodes.Add(new MongoTreeNode
                             {
@@ -141,22 +146,26 @@ namespace MongoDB.Component
                             MongoObjects.Add(tbl.ID, tbl);
                         });
 
-                        var tbls = TreeNodes.Where(n => n.PID == database.ID).ToList();
-                        Parallel.ForEach(tbls, table => GetCollectionInfo(db, table));
+                        Parallel.ForEach(tblNodes, id => GetCollectionInfo(db, id));
                     }
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetLogger("MongoContext").Error("获取数据表信息时出错", ex);
                 }
             }
         }
 
 
-        private void GetCollectionInfo(MongoDatabase db, MongoTreeNode node)
+        private void GetCollectionInfo(MongoDatabase db, Guid guid)
         {
-            object obj;
-            if (MongoObjects.TryGetValue(node.ID, out obj))
+            if (MongoObjects.ContainsKey(guid))
             {
-                var table = obj as MongoCollectionModel;
-                if (table != null)
+                var table = MongoObjects[guid] as MongoCollectionModel;
+
+                try
                 {
+                    #region 字段
                     //字段类型信息节点
                     var fieldNode = new MongoTreeNode
                     {
@@ -168,7 +177,7 @@ namespace MongoDB.Component
                     TreeNodes.Add(fieldNode);
 
                     //字段节点
-                    var doc = db[table.Name].FindOne();
+                    var doc = db.GetCollection(table.Name).FindOne();
                     if (doc != null)
                     {
                         foreach (var item in doc.Names)
@@ -190,7 +199,9 @@ namespace MongoDB.Component
                             MongoObjects.Add(field.ID, field);
                         }
                     }
+                    #endregion
 
+                    #region 索引
                     //索引类型信息节点
                     var indexNode = new MongoTreeNode
                     {
@@ -202,7 +213,7 @@ namespace MongoDB.Component
                     TreeNodes.Add(indexNode);
 
                     //索引节点
-                    var indexes = db[MongoConst.IndexTableName].Find(MongoDocument.CreateQuery("ns", table.Namespace));
+                    var indexes = db.GetCollection(MongoConst.IndexTableName).Find(MongoDocument.CreateQuery("ns", table.Namespace));
                     if (indexes != null)
                     {
                         foreach (var idx in indexes.ToList())
@@ -210,9 +221,9 @@ namespace MongoDB.Component
                             var index = new MongoIndexModel
                             {
                                 ID = Guid.NewGuid(),
-                                Name = idx["name"].ToString(),
-                                Namespace = idx["ns"].ToString(),
-                                Unique = Convert.ToBoolean(idx["unique"]),
+                                Name = idx["name"].AsString,
+                                Namespace = idx["ns"].AsString,
+                                Unique = idx.Contains("unique") ? idx["unique"].AsBoolean : false,
                                 Keys = new List<MongoIndexKey>()
                             };
                             var docFields = idx["key"].AsBsonDocument;
@@ -236,6 +247,11 @@ namespace MongoDB.Component
                             MongoObjects.Add(index.ID, index);
                         }
                     }
+                    #endregion
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetLogger("MongoContext").Error("获取字段和索引信息时出错", ex);
                 }
             }
         }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using MongoDB.Defination;
+using System.Collections;
 
 namespace MongoDB.Component
 {
@@ -13,13 +15,13 @@ namespace MongoDB.Component
 
         public static bool CacheValid()
         {
-            var nodes = HttpContext.Current.Cache.Get(NodeKey) as List<MongoTreeNode>;
+            var nodes = HttpContext.Current.Cache.Get(NodeKey) as HashSet<MongoTreeNode>;
             return nodes != null;
         }
 
-        public static List<MongoTreeNode> GetTreeNodes()
+        public static HashSet<MongoTreeNode> GetTreeNodes()
         {
-            var nodes = HttpContext.Current.Cache.Get(NodeKey) as List<MongoTreeNode>;
+            var nodes = HttpContext.Current.Cache.Get(NodeKey) as HashSet<MongoTreeNode>;
             if (nodes == null)
             {
                 var context = new MongoContext();
@@ -32,13 +34,13 @@ namespace MongoDB.Component
 
         public static MongoTreeNode GetTreeNode(Guid guid)
         {
-            var list = GetTreeNodes();
-            return list.Find(i => i.ID == guid);
+            var hash = GetTreeNodes();
+            return hash.Single(i => i.ID == guid);
         }
 
-        public static Dictionary<Guid, object> GetMongoObjects()
+        public static Hashtable GetMongoObjects()
         {
-            var dict = HttpContext.Current.Cache.Get(ObjKey) as Dictionary<Guid, object>;
+            var dict = HttpContext.Current.Cache.Get(ObjKey) as Hashtable;
             if (dict == null)
             {
                 var context = new MongoContext();
@@ -52,12 +54,7 @@ namespace MongoDB.Component
         public static object GetMongoObject(Guid guid)
         {
             var dict = GetMongoObjects();
-            object obj;
-            if (dict.TryGetValue(guid, out obj))
-            {
-                return obj;
-            }
-            return null;
+            return dict.ContainsKey(guid) ? dict[guid] : null;
         }
 
         public static void Clear()

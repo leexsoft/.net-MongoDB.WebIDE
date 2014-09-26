@@ -182,8 +182,8 @@ namespace MongoDB.Component
                     {
                         ID = Guid.NewGuid(),
                         PID = table.ID,
-                        Name = "字段",
-                        Type = MongoTreeNodeType.FieldFiller
+                        Name = "表信息",
+                        Type = MongoTreeNodeType.TableFiller
                     };
                     TreeNodes.Add(fieldNode);
 

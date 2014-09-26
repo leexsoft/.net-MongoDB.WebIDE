@@ -30,7 +30,7 @@ namespace MongoDB.Component
         /// <returns></returns>
         public List<MongoTreeNode> GetFieldNodes()
         {
-            var fieldFiller = MongoCache.GetTreeNodes().Where(n => n.PID == Table.ID && n.Type == MongoTreeNodeType.FieldFiller).First();
+            var fieldFiller = MongoCache.GetTreeNodes().Where(n => n.PID == Table.ID && n.Type == MongoTreeNodeType.TableFiller).First();
             return MongoCache.GetTreeNodes().Where(n => n.PID == fieldFiller.ID).ToList();
         }
 

@@ -1,0 +1,38 @@
+﻿@using MongoDB.WebIDE.Models
+@using MongoDB.Defination
+@model ShowProfileModel
+@section style{
+	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
+}
+@section script{
+	<script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Content/js/showprofile.js")" type="text/javascript"></script>
+}
+<input id="guid" type="hidden" value="@Model.ID" />
+<div class="PageTitle">
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
+</div>
+<div class="accordion-heading alert-success mt10">
+	<a class="accordion-toggle" data-toggle="collapse">Profile</a>
+</div>
+<div class="accordion-inner alert-info">
+	<div class="form-inline">
+		<label class="radio inline">
+			<strong>设置Profile:</strong>
+		</label>
+		<label class="radio inline">
+			<input type="radio" id="cbStatus1" name="status" value="0" @(Model.Status == 0 ? "checked" : "")>不开启
+		</label>
+		<label class="radio inline">
+			<input type="radio" id="cbStatus2" name="status" value="1" @(Model.Status == 1 ? "checked" : "")>记录慢命令
+		</label>
+		<label class="radio inline">
+			<input type="radio" id="cbStatus3" name="status" value="2" @(Model.Status == 1 ? "checked" : "")>记录所有命令
+		</label>
+		<label class="radio inline">
+			<strong>慢命令时间：</strong>
+			<input type="text" id="slowms" value="100" class="input-mini" disabled />
+			<a class="btn btn-primary btn-small">设置</a>
+		</label>
+	</div>
+</div>

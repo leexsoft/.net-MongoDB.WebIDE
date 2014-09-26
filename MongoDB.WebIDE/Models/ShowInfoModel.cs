@@ -1,10 +1,9 @@
-﻿using MongoDB.Driver;
-using MongoDB.Model;
-
-namespace MongoDB.WebIDE.Models
+﻿namespace MongoDB.WebIDE.Models
 {
     public class ShowInfoModel
     {
+        public string ID { get; set; }
+
         public string Title { get; set; }
 
         public int Type { get; set; }

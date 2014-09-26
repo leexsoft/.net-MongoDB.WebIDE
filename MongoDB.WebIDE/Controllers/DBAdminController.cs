@@ -17,6 +17,7 @@ namespace MongoDB.WebIDE.Controllers
         {
             var model = new ShowInfoModel
             {
+                ID = id,
                 Type = type
             };
 
@@ -44,6 +45,21 @@ namespace MongoDB.WebIDE.Controllers
 
             return View(model);
         }
+
+        #region Prfile优化
+        public ActionResult ShowProfile(string id)
+        {
+            var mongo = new MongoProfileContext(id);
+            var model = new ShowProfileModel
+            {
+                ID = id,
+                Title = mongo.Database.FullInfo,
+                Status = mongo.GetProfileStatus()
+            };
+            return View(model);
+        }
+        #endregion
+
         #endregion
 
         #region 查询数据
@@ -111,19 +127,6 @@ namespace MongoDB.WebIDE.Controllers
             {
                 return Json(new { Success = false, Message = ex.Message });
             }
-        }
-        #endregion
-
-        #region Prfile优化
-        [HttpPost]
-        public JsonResult ShowPrfileInfo(string id)
-        {
-            var mongo = new MongoProfileContext(id);
-            var model = new ProfileInfoModel
-            {
-                Status = 0 //mongo.GetProfileStatus()
-            };
-            return Json(model);
         }
         #endregion
     }

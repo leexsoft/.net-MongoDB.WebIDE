@@ -75,7 +75,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ShowInfoModel.cs" />
-    <Compile Include="Models\ProfileInfoModel.cs" />
+    <Compile Include="Models\ShowProfileModel.cs" />
     <Compile Include="Models\ShowDataModel.cs" />
     <Compile Include="Models\ShowIndexModel.cs" />
     <Compile Include="Models\SaveIndexModel.cs" />
@@ -173,7 +173,7 @@
     <Content Include="Views\DBAdmin\ShowData.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DBAdmin\ShowProfileInfo.cshtml" />
+    <Content Include="Views\DBAdmin\ShowProfile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

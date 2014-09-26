@@ -18,25 +18,22 @@ namespace MongoDB.Component
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
-        /*
         public int GetProfileStatus()
         {
-            using (var mongo = new Mongo(string.Format(ConnString, Server.Name)))
+            var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
+            var server = mongo.GetServer();
+            var db = server.GetDatabase(Database.Name);
+
+            var levelDoc = db.SendCommand(MongoDocument.CreateQuery("profile", -1));
+            if (levelDoc != null)
             {
-                mongo.Connect();
-                var db = mongo.GetDatabase(Database.Name);
-                var levelDoc = db.SendCommand(new Document().Append("profile", -1));
-                if (levelDoc != null)
+                int ok = int.Parse(levelDoc["ok"].ToString());
+                if (ok == 1)
                 {
-                    int ok = int.Parse(levelDoc["ok"].ToString());
-                    if (ok == 1)
-                    {
-                        return int.Parse(levelDoc["was"].ToString());
-                    }
+                    return int.Parse(levelDoc["was"].ToString());
                 }
-                return 0;
             }
+            return 0;
         }
-         * */
     }
 }

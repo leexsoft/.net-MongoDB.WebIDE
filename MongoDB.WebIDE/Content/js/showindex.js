@@ -2,13 +2,12 @@
     $('[action]').click(function () {
         if (window.confirm('确认需要删除此索引吗？')) {
             var id = $('#hdId').val();
-            var $tr = $(this).closest('tr');
-            var field = $tr.find('td').eq(0).text();
+            var guid = $(this).attr('guid');
             $.ajax({
                 url: '/DBAdmin/DeleteIndex/',
                 type: 'POST',
                 cache: false,
-                data: { id: id, name: field },
+                data: { id: id, guid: guid },
                 dataType: 'json',
                 success: function (rst) {
                     alert(rst.Message);

@@ -1,6 +1,10 @@
 ﻿$(document).ready(function () {
-    var $main = $("#mainFrame");
+    var htmlHeight = $(window).outerHeight();
+    var navHeight = $('.navbar').outerHeight();
+    $('.site-left').height(htmlHeight - navHeight - 30);
+    $('.site-left').next('div').height(htmlHeight - navHeight - 30);
 
+    var $main = $("#mainFrame");
     var nodeClick = function (event, treeId, treeNode) {
         var type = treeNode.Type;
         var id = treeNode.ID;
@@ -12,7 +16,7 @@
             url = "/DBAdmin/ShowData?id=" + id;
             $main.prop("src", url);
         } else if (type == 7) {
-             url = "/DBAdmin/ShowIndex?id=" + id;
+            url = "/DBAdmin/ShowIndex?id=" + id;
             $main.prop("src", url);
         }
     };

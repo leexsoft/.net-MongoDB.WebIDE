@@ -105,12 +105,12 @@ namespace MongoDB.WebIDE.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteIndex(string id, string name)
+        public JsonResult DeleteIndex(string id, string guid)
         {
             var mongo = new MongoIndexContext(id);
             try
             {
-                mongo.DeleteIndex(name.Trim());
+                mongo.DeleteIndex(guid);
                 return Json(new { Success = true, Message = "索引删除成功" });
             }
             catch (Exception ex)

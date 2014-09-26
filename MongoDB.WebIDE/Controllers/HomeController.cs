@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using MongoDB.Component;
+using System.Linq;
 
 namespace MongoDB.WebIDE.Controllers
 {
@@ -18,7 +19,7 @@ namespace MongoDB.WebIDE.Controllers
         [HttpPost]
         public JsonResult GetServerDetail()
         {
-            var nodes = MongoCache.GetTreeNodes();
+            var nodes = MongoCache.GetTreeNodes().ToList();
             return Json(nodes);
         }
     }

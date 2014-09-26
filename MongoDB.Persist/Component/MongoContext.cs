@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using MongoDB.Model;
 using System.Collections;
 using log4net;
+using System.Diagnostics;
 
 namespace MongoDB.Component
 {
@@ -22,10 +23,10 @@ namespace MongoDB.Component
             TreeNodes = new HashSet<MongoTreeNode>();
             MongoObjects = Hashtable.Synchronized(new Hashtable());
 
-            GetServerDetail();
+            GetServer();
         }
 
-        private void GetServerDetail()
+        private void GetServer()
         {
             var serverNodes = new HashSet<Guid>();
             var xml = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/servers.config"));
@@ -54,22 +55,23 @@ namespace MongoDB.Component
                 MongoObjects.Add(serverModel.ID, serverModel);
             });
 
-            Parallel.ForEach(serverNodes, id => GetServerDB(id));
+            Parallel.ForEach(serverNodes, id => GetDB(id));
         }
 
-        private void GetServerDB(Guid guid)
+        private void GetDB(Guid guid)
         {
             if (MongoObjects.ContainsKey(guid))
             {
                 var serverModel = MongoObjects[guid] as MongoServerModel;
+                var watch = new Stopwatch();
+                watch.Start();
+
                 try
                 {
                     var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
                     var server = mongo.GetServer();
                     var adminDB = server.GetDatabase(MongoConst.AdminDBName);
                     var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
-
-                    serverModel.IsOK = true;
                     serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
 
                     var dbNodes = new HashSet<Guid>();
@@ -81,7 +83,7 @@ namespace MongoDB.Component
                             var db = new MongoDatabaseModel
                             {
                                 ID = Guid.NewGuid(),
-                                Name = item["name"].ToString(),
+                                Name = item["name"].AsString,
                                 Size = Convert.ToInt64(item["sizeOnDisk"])
                             };
 
@@ -98,7 +100,7 @@ namespace MongoDB.Component
                             MongoObjects.Add(db.ID, db);
                         });
 
-                        Parallel.ForEach(dbNodes, id => GetDBCollection(server, id));
+                        Parallel.ForEach(dbNodes, id => GetCollection(server, id));
                     }
                 }
                 catch (Exception ex)
@@ -106,14 +108,19 @@ namespace MongoDB.Component
                     LogManager.GetLogger("MongoContext").Error("获取数据库信息时出错", ex);
                     serverModel.IsOK = false;
                 }
+
+                LogManager.GetLogger("InfoLog").Info(string.Format("获取服务器{0}的所有数据库对象共花费了大约{1}毫秒的时间", serverModel.Name, watch.ElapsedMilliseconds));
+                watch.Stop();
             }
         }
 
-        private void GetDBCollection(MongoServer server, Guid guid)
+        private void GetCollection(MongoServer server, Guid guid)
         {
             if (MongoObjects.ContainsKey(guid))
             {
                 var database = MongoObjects[guid] as MongoDatabaseModel;
+                var watch = new Stopwatch();
+                watch.Start();
 
                 try
                 {
@@ -146,22 +153,26 @@ namespace MongoDB.Component
                             MongoObjects.Add(tbl.ID, tbl);
                         });
 
-                        Parallel.ForEach(tblNodes, id => GetCollectionInfo(db, id));
+                        Parallel.ForEach(tblNodes, id => GetFieldAndIndex(db, id));
                     }
                 }
                 catch (Exception ex)
                 {
                     LogManager.GetLogger("MongoContext").Error("获取数据表信息时出错", ex);
                 }
+
+                LogManager.GetLogger("InfoLog").Info(string.Format("获取服务库{0}的所有表对象共花费了大约{1}毫秒的时间", database.Name, watch.ElapsedMilliseconds));
+                watch.Stop();
             }
         }
 
-
-        private void GetCollectionInfo(MongoDatabase db, Guid guid)
+        private void GetFieldAndIndex(MongoDatabase db, Guid guid)
         {
             if (MongoObjects.ContainsKey(guid))
             {
                 var table = MongoObjects[guid] as MongoCollectionModel;
+                var watch = new Stopwatch();
+                watch.Start();
 
                 try
                 {
@@ -253,6 +264,9 @@ namespace MongoDB.Component
                 {
                     LogManager.GetLogger("MongoContext").Error("获取字段和索引信息时出错", ex);
                 }
+
+                LogManager.GetLogger("InfoLog").Info(string.Format("获取服务表{0}的所有字段和索引对象共花费了大约{1}毫秒的时间", table.Name, watch.ElapsedMilliseconds));
+                watch.Stop();
             }
         }
     }

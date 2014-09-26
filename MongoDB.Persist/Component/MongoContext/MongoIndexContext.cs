@@ -50,11 +50,15 @@ namespace MongoDB.Component
             return indexes;
         }
 
+        /// <summary>
+        /// 新建索引
+        /// </summary>
+        /// <param name="jsonData"></param>
         public void CreateIndex(string jsonData)
         {
             var model = JsonConvert.DeserializeObject<SaveIndexModel>(jsonData);
             var idxDoc = ToDoc(model.Keys);
-            var idxOption = new IndexOptionsDocument(false);
+            var idxOption = new IndexOptionsDocument();
             idxOption.Add("background", model.Background);
             idxOption.Add("dropdups", model.Dropdups);
 
@@ -70,7 +74,7 @@ namespace MongoDB.Component
 
         private IndexKeysDocument ToDoc(List<KeyModel> keys)
         {
-            var doc = new IndexKeysDocument(false);
+            var doc = new IndexKeysDocument();
             if (keys != null && keys.Count > 0)
             {
                 foreach (var key in keys)
@@ -81,14 +85,19 @@ namespace MongoDB.Component
             return doc;
         }
 
-        public void DeleteIndex(string name)
+        /// <summary>
+        /// 删除索引
+        /// </summary>
+        /// <param name="name"></param>
+        public void DeleteIndex(string guid)
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
 
+            var idx = MongoCache.GetMongoObject(Guid.Parse(guid)) as MongoIndexModel;
             var tbl = db.GetCollection(Table.Name);
-            tbl.DropIndex(name);
+            tbl.DropIndex(idx.Keys.Select(k => k.FieldName).ToArray());
 
             MongoCache.Clear();
         }

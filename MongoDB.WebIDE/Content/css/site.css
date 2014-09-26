@@ -1,5 +1,4 @@
 ﻿/* File Created: 八月 14, 2014 */
-.default-height { height: 700px; }
 .mt10 { margin-top: 10px; }
 .pt10 { padding-top: 10px; }
 .pr10 { padding-right: 10px; }
@@ -15,3 +14,6 @@
 .PageTitle div { white-space: nowrap; }
 .PageTitle img { vertical-align: middle; }
 .PageTitle span { font-size: 12px; font-weight: bold; }
+
+/*表数据*/
+.datatable { height:400px; overflow-y: scroll; }

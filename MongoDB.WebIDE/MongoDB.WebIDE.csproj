@@ -100,6 +100,7 @@
     <Content Include="Content\js\jquery-1.11.1.min.js" />
     <Content Include="Content\js\showinfo.js" />
     <Content Include="Content\js\showindex.js" />
+    <Content Include="Content\js\showdata.js" />
     <Content Include="Content\ztree\css\img\diy\1_close.png" />
     <Content Include="Content\ztree\css\img\diy\1_open.png" />
     <Content Include="Content\ztree\css\img\diy\2.png" />

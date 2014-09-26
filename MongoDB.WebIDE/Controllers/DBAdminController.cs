@@ -52,6 +52,7 @@ namespace MongoDB.WebIDE.Controllers
             var mongo = new MongoDataContext(id);
             var model = new ShowDataModel
             {
+                ID = id,
                 Title = mongo.Table.FullInfo,
                 Fields = mongo.GetFieldNodes(),
                 Data = mongo.GetData(50)
@@ -60,18 +61,11 @@ namespace MongoDB.WebIDE.Controllers
         }
 
         [HttpPost]
-        public JsonResult Explain(string id, string data)
+        public JsonResult Explain(string id, string key, string val)
         {
             var mongo = new MongoDataContext(id);
-            try
-            {
-                //mongo.CreateIndex(data);
-                return Json(new { Success = true, Message = "索引创建成功" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
+            var list = mongo.Explain(key, val);
+            return Json(list);
         }
         #endregion
 

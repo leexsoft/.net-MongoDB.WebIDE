@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 
 namespace MongoDB.Component
 {
@@ -12,6 +14,18 @@ namespace MongoDB.Component
         {
             var query = new QueryDocument();
             query.Add(command, value);
+            return query;
+        }
+
+        public static QueryDocument CreateQuery(string json)
+        {
+            var hash = JsonConvert.DeserializeObject<Hashtable>(json);
+
+            var query = new QueryDocument();
+            foreach (string key in hash.Keys)
+            {
+                query.Add(key, BsonValue.Create(hash[key]));
+            }
             return query;
         }
     }

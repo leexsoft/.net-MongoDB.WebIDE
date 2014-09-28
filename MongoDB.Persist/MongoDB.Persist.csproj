@@ -54,6 +54,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\MongoContext\MongoServerContext.cs" />
     <Compile Include="Component\MongoDocument.cs" />
     <Compile Include="Component\MongoInfoFactory.cs" />
     <Compile Include="Component\MongoContext.cs" />

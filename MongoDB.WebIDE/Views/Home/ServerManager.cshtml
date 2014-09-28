@@ -1,0 +1,85 @@
+﻿@using MongoDB.Model
+@using MongoDB.Defination
+@model List<MongoServerModel>
+@section script{
+	<script src="@Url.Content("~/Content/js/servermanager.js")" type="text/javascript"></script>
+}
+<div class="PageTitle">
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">服务器管理</strong>
+</div>
+<div class="accordion mt10" id="accordion1">
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">服务器列表</a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner">
+				<table class="table table-bordered table-striped table-hover">
+					<tr>
+						<th>
+							<span class="label label-info">IP</span>
+						</th>
+						<th>
+							<span class="label label-info">Port</span>
+						</th>
+						<th>
+							<span class="label label-info">操作</span>
+						</th>
+					</tr>
+					@{
+						foreach (var server in Model)
+						{
+						<tr>
+							<td>
+								@server.IP
+							</td>
+							<td>
+								@server.Port
+							</td>
+							<td>
+								<a action="delete" ip="@server.IP" port="@server.Port">删除<i class="icon-remove"></i></a>
+							</td>
+						</tr>
+						}
+					}
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">服务器添加</a>
+		</div>
+		<div id="collapseTwo" class="accordion-body collapse alert-info">
+			<div class="accordion-inner">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							IP:
+						</label>
+						<div class="controls">
+							<input type="text" class="input-large" id="txtIP" />
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">
+							Port:
+						</label>
+						<div class="controls">
+							<input type="text" class="input-large" id="txtPort" value="27017" />
+						</div>
+					</div>
+				</div>
+				<div class="form-horizontal">
+					<div class="control-group">
+						<div class="controls">
+							<a class="btn btn-primary btn-small" id="btnSave">确定</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

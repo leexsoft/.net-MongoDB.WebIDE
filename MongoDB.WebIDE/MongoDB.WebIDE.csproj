@@ -102,6 +102,7 @@
     <Content Include="Content\js\showindex.js" />
     <Content Include="Content\js\showdata.js" />
     <Content Include="Content\js\showprofile.js" />
+    <Content Include="Content\js\servermanager.js" />
     <Content Include="Content\ztree\css\img\diy\1_close.png" />
     <Content Include="Content\ztree\css\img\diy\1_open.png" />
     <Content Include="Content\ztree\css\img\diy\2.png" />
@@ -175,6 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DBAdmin\ShowProfile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\ServerManager.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

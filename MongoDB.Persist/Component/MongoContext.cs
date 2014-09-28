@@ -72,6 +72,8 @@ namespace MongoDB.Component
                     var server = mongo.GetServer();
                     var adminDB = server.GetDatabase(MongoConst.AdminDBName);
                     var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
+
+                    serverModel.IsOK = true;
                     serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
 
                     var dbNodes = new HashSet<Guid>();
@@ -234,7 +236,7 @@ namespace MongoDB.Component
                                 ID = Guid.NewGuid(),
                                 Name = idx["name"].AsString,
                                 Namespace = idx["ns"].AsString,
-                                Unique = idx.Contains("unique") ? idx["unique"].AsBoolean : false,
+                                Unique = idx.Contains("unique") ? (idx["unique"].AsDouble == 1.0 ? true : false) : false,
                                 Keys = new List<MongoIndexKey>()
                             };
                             var docFields = idx["key"].AsBsonDocument;

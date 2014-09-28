@@ -1,8 +1,11 @@
 ﻿$(document).ready(function () {
     var htmlHeight = $(window).outerHeight();
     var navHeight = $('.navbar').outerHeight();
+    var menutopHeight = $('.site-left-top').outerHeight();
     $('.site-left').height(htmlHeight - navHeight - 30);
     $('.site-left').next('div').height(htmlHeight - navHeight - 30);
+    $('#menu').css({ 'height': htmlHeight - navHeight - menutopHeight - 30, 'overflow-y': 'auto' });
+    $('a[action]').css('cursor', 'pointer');
 
     var $main = $("#mainFrame");
     var nodeClick = function (event, treeId, treeNode) {
@@ -51,10 +54,21 @@
         dataType: 'json',
         success: function (rst) {
             var zNodes = rst;
-            t = $.fn.zTree.init($t, setting, zNodes);
+            zTreeObj = $.fn.zTree.init($t, setting, zNodes);
         },
         error: function () {
             alert('请求发生异常，请重试');
+        }
+    });
+
+    $('a[action]').click(function () {
+        var action = $(this).attr('action');
+        if (action == 'expand' && zTreeObj) {
+            zTreeObj.expandAll(true);
+        } else if (action == 'collapse' && zTreeObj) {
+            zTreeObj.expandAll(false);
+        } else if (action == 'refresh') {
+            window.top.location.reload();
         }
     });
 });

@@ -74,6 +74,21 @@ namespace MongoDB.WebIDE.Controllers
                 return Json(new { Success = false, Message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public JsonResult GetProfileData(string id, int limit)
+        {
+            var mongo = new MongoProfileContext(id);
+            try
+            {
+                var list = mongo.GetProfileData(limit);
+                return Json(new { Success = true, Message = list });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
         #endregion
 
         #region 查询数据

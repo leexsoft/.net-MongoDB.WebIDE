@@ -78,6 +78,7 @@
     <Compile Include="Model\MongoFiledModel.cs" />
     <Compile Include="Model\MongoIndexModel.cs" />
     <Compile Include="Model\SaveIndexModel.cs" />
+    <Compile Include="Model\MongoProfileModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\MongoServerModel.cs" />
     <Compile Include="Web\Atrribute\CacheValidAttribute.cs" />

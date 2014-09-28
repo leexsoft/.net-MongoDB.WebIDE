@@ -1,38 +1,93 @@
 ﻿@using MongoDB.WebIDE.Models
 @using MongoDB.Driver
 @model ShowProfileModel
-@section style{
-	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
-}
 @section script{
-	<script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
 	<script src="@Url.Content("~/Content/js/showprofile.js")" type="text/javascript"></script>
 }
 <input id="hdId" type="hidden" value="@Model.ID" />
 <div class="PageTitle">
 	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
 </div>
-<div class="accordion-heading alert-success mt10">
-	<a class="accordion-toggle" data-toggle="collapse">Profile</a>
-</div>
-<div class="accordion-inner alert-info">
-	<div class="form-inline">
-		<label class="radio inline">
-			<strong>设置Profile:</strong>
-		</label>
-		<label class="radio inline">
-			<input type="radio" id="cbStatus1" name="status" value="0" @(Model.Status == ProfilingLevel.None ? "checked" : "")>不开启
-		</label>
-		<label class="radio inline">
-			<input type="radio" id="cbStatus2" name="status" value="1" @(Model.Status == ProfilingLevel.Slow ? "checked" : "")>记录慢命令
-		</label>
-		<label class="radio inline">
-			<input type="radio" id="cbStatus3" name="status" value="2" @(Model.Status == ProfilingLevel.All ? "checked" : "")>记录所有命令
-		</label>
-		<label class="radio inline">
-			<strong>慢命令时间：</strong>
-			<input type="text" id="txtSlowms" value="100" class="input-mini" disabled />
-			<a class="btn btn-primary btn-small" id="btnSetProfile">设置</a>
-		</label>
+<div class="accordion mt10" id="accordion1">
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">Profile设置</a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner alert-info">
+				<div class="form-inline">
+					<label class="radio inline">
+						<strong>设置Profile:</strong>
+					</label>
+					<label class="radio inline">
+						<input type="radio" id="cbStatus1" name="status" value="0" @(Model.Status == ProfilingLevel.None ? "checked" : "")>不开启
+					</label>
+					<label class="radio inline">
+						<input type="radio" id="cbStatus2" name="status" value="1" @(Model.Status == ProfilingLevel.Slow ? "checked" : "")>记录慢命令
+					</label>
+					<label class="radio inline">
+						<input type="radio" id="cbStatus3" name="status" value="2" @(Model.Status == ProfilingLevel.All ? "checked" : "")>记录所有命令
+					</label>
+					<label class="radio inline">
+						<strong>慢命令时间：</strong>
+						<input type="text" id="txtSlowms" value="100" class="input-mini" @(Model.Status == ProfilingLevel.Slow ? "" : "disabled") />
+						<a class="btn btn-primary btn-small" id="btnSetProfile">设置</a>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">Profile数据</a>
+		</div>
+		<div id="collapseTwo" class="accordion-body collapse">
+			<div class="accordion-inner">
+				<div class="form-inline">
+					<label>
+						显示条数:
+					</label>
+					<input type="text" class="input-mini" id="txtLimit" value="50" />
+					<a class="btn btn-primary btn-small" id="btnShow">显示</a>
+				</div>
+				<table class="table table-bordered table-striped table-hover mt10">
+					<tr>
+						<th>
+							<span class="label label-info">客户端</span>
+						</th>
+						<th>
+							<span class="label label-info">执行时间</span>
+						</th>
+						<th>
+							<span class="label label-info">执行时长</span>
+						</th>
+						<th>
+							<span class="label label-info">基本信息</span>
+						</th>
+						<th>
+							<span class="label label-info">操作</span>
+						</th>
+						<th>
+							<span class="label label-info">返回记录数</span>
+						</th>
+						<th>
+							<span class="label label-info">返回集大小</span>
+						</th>
+						<th>
+							<span class="label label-info">扫描记录数</span>
+						</th>
+						<th>
+							<span class="label label-info">取出记录数</span>
+						</th>
+						<th>
+							<span class="label label-info">移动数</span>
+						</th>
+						<th>
+							<span class="label label-info">修改数</span>
+						</th>
+					</tr>
+				</table>
+			</div>
 	</div>
 </div>
+</div> 

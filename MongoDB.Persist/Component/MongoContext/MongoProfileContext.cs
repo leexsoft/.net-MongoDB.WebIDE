@@ -1,8 +1,8 @@
-﻿using MongoDB.Driver;
-using MongoDB.Model;
+﻿using System;
+using System.Collections;
 using MongoDB.Defination;
-using System.Collections.Generic;
-using System;
+using MongoDB.Driver;
+using MongoDB.Model;
 
 namespace MongoDB.Component
 {
@@ -18,22 +18,42 @@ namespace MongoDB.Component
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
-        public int GetProfileStatus()
+        public ProfilingLevel GetProfileStatus()
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
 
-            var levelDoc = db.SendCommand(MongoDocument.CreateQuery("profile", -1));
-            if (levelDoc != null)
+            var rst = db.GetProfilingLevel();
+            if(string.IsNullOrEmpty(rst.ErrorMessage))
             {
-                int ok = int.Parse(levelDoc["ok"].ToString());
-                if (ok == 1)
+                if (rst.Ok)
                 {
-                    return int.Parse(levelDoc["was"].ToString());
+                    return rst.Level;
                 }
+                return ProfilingLevel.None;
             }
-            return 0;
+            else
+            {
+                throw new MongoException(rst.ErrorMessage);
+            }
+        }
+
+        public bool SetProfile(int level, int slowms)
+        {
+            var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
+            var server = mongo.GetServer();
+            var db = server.GetDatabase(Database.Name);
+
+            var rst = db.SetProfilingLevel((ProfilingLevel)level, new TimeSpan(0, 0, 0, 0, slowms));
+            if(string.IsNullOrEmpty(rst.ErrorMessage))
+            {
+                return true;
+            }
+            else
+            {
+                throw new MongoException(rst.ErrorMessage);
+            }
         }
     }
 }

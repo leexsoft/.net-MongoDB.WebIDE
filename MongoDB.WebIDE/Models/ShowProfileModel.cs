@@ -9,6 +9,6 @@ namespace MongoDB.WebIDE.Models
 
         public string Title { get; set; }
 
-        public int Status { get; set; }
+        public ProfilingLevel Status { get; set; }
     }
 }

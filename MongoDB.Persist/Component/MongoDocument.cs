@@ -17,6 +17,16 @@ namespace MongoDB.Component
             return query;
         }
 
+        public static QueryDocument CreateQuery(Hashtable hash)
+        {
+            var query = new QueryDocument();
+            foreach (string key in hash.Keys)
+            {
+                query.Add(key, BsonValue.Create(hash[key]));
+            }
+            return query;
+        }
+
         public static QueryDocument CreateQuery(string json)
         {
             var hash = JsonConvert.DeserializeObject<Hashtable>(json);

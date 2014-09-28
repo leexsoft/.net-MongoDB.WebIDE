@@ -45,7 +45,8 @@ namespace MongoDB.WebIDE.Controllers
 
             return View(model);
         }
-
+        #endregion
+        
         #region Prfile优化
         public ActionResult ShowProfile(string id)
         {
@@ -58,8 +59,21 @@ namespace MongoDB.WebIDE.Controllers
             };
             return View(model);
         }
-        #endregion
 
+        [HttpPost]
+        public JsonResult SetProfile(string id, int level, int slowms)
+        {
+            var mongo = new MongoProfileContext(id);
+            try
+            {
+                mongo.SetProfile(level, slowms);
+                return Json(new { Success = true, Message = "Profile设置成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
         #endregion
 
         #region 查询数据

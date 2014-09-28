@@ -29,10 +29,13 @@ namespace MongoDB.Component
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
-            var doc = db.SendCommand(MongoDocument.CreateQuery("collstats", Table.Name));
+            var rst = db.RunCommand(new CommandDocument { { "collstats", Table.Name } });
 
             var list = new List<MongoTreeNode>();
-            BuildTreeNode(list, Guid.Empty, doc);
+            if (rst.Ok)
+            {
+                BuildTreeNode(list, Guid.Empty, rst.Response);
+            }
             return list;
         }
     }

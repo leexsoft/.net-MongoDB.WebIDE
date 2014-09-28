@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using log4net;
 using MongoDB.Defination;
 using MongoDB.Driver;
 using MongoDB.Model;
-using System.Collections;
-using log4net;
-using System.Diagnostics;
 
 namespace MongoDB.Component
 {
@@ -71,38 +71,42 @@ namespace MongoDB.Component
                     var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
                     var server = mongo.GetServer();
                     var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-                    var dbDoc = adminDB.SendCommand(MongoDocument.CreateQuery("listDatabases", 1));
+                    var rst = adminDB.RunCommand(new CommandDocument{{"listDatabases", 1}});
 
-                    serverModel.IsOK = true;
-                    serverModel.TotalSize = Convert.ToInt64(dbDoc["totalSize"]);
-
-                    var dbNodes = new HashSet<Guid>();
-                    var dbList = dbDoc["databases"].AsBsonArray;
-                    if (dbList != null)
+                    if (rst.Ok)
                     {
-                        dbList.AsParallel().ForAll(item =>
+                        var dbDoc = rst.Response;
+                        serverModel.IsOK = true;
+                        serverModel.TotalSize = dbDoc["totalSize"].AsDouble;
+
+                        var dbNodes = new HashSet<Guid>();
+                        var dbList = dbDoc["databases"].AsBsonArray;
+                        if (dbList != null)
                         {
-                            var db = new MongoDatabaseModel
+                            dbList.AsParallel().ForAll(item =>
                             {
-                                ID = Guid.NewGuid(),
-                                Name = item["name"].AsString,
-                                Size = Convert.ToInt64(item["sizeOnDisk"])
-                            };
+                                var db = new MongoDatabaseModel
+                                {
+                                    ID = Guid.NewGuid(),
+                                    Name = item["name"].AsString,
+                                    Size = item["sizeOnDisk"].AsDouble
+                                };
 
-                            dbNodes.Add(db.ID);
+                                dbNodes.Add(db.ID);
 
-                            TreeNodes.Add(new MongoTreeNode
-                            {
-                                ID = db.ID,
-                                PID = serverModel.ID,
-                                Name = db.Name,
-                                Type = MongoTreeNodeType.Database
+                                TreeNodes.Add(new MongoTreeNode
+                                {
+                                    ID = db.ID,
+                                    PID = serverModel.ID,
+                                    Name = db.Name,
+                                    Type = MongoTreeNodeType.Database
+                                });
+
+                                MongoObjects.Add(db.ID, db);
                             });
 
-                            MongoObjects.Add(db.ID, db);
-                        });
-
-                        Parallel.ForEach(dbNodes, id => GetCollection(server, id));
+                            Parallel.ForEach(dbNodes, id => GetCollection(server, id));
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -226,7 +230,7 @@ namespace MongoDB.Component
                     TreeNodes.Add(indexNode);
 
                     //索引节点
-                    var indexes = db.GetCollection(MongoConst.IndexTableName).Find(MongoDocument.CreateQuery("ns", table.Namespace));
+                    var indexes = db.GetCollection(MongoConst.IndexTableName).Find(new QueryDocument { { "ns", table.Namespace } });
                     if (indexes != null)
                     {
                         foreach (var idx in indexes.ToList())

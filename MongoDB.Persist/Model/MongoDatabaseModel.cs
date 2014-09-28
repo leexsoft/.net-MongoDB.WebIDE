@@ -21,7 +21,7 @@ namespace MongoDB.Model
         /// <summary>
         /// 总容量
         /// </summary>
-        public long Size { get; set; }
+        public double Size { get; set; }
         /// <summary>
         /// 全信息
         /// </summary>

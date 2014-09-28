@@ -29,7 +29,7 @@ namespace MongoDB.Model
         /// <summary>
         /// 总容量
         /// </summary>
-        public long TotalSize { get; set; }
+        public double TotalSize { get; set; }
         /// <summary>
         /// 服务器状态
         /// </summary>

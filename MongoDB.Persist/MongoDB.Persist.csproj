@@ -55,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\MongoContext\MongoServerContext.cs" />
-    <Compile Include="Component\MongoDocument.cs" />
     <Compile Include="Component\MongoInfoFactory.cs" />
     <Compile Include="Component\MongoContext.cs" />
     <Compile Include="Component\MongoInfo\MongoServerInfo.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Defination\MongoTreeNodeType.cs" />
     <Compile Include="Defination\MongoIndexOrderType.cs" />
     <Compile Include="Defination\MongoConst.cs" />
-    <Compile Include="Extension\MongoExtension.cs" />
     <Compile Include="Model\MongoDatabaseModel.cs" />
     <Compile Include="Model\MongoCollectionModel.cs" />
     <Compile Include="Model\MongoFiledModel.cs" />

@@ -44,8 +44,7 @@ namespace MongoDB.Component
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
-
-            var doc = db.GetCollection(Table.Name).Find(MongoDocument.CreateQuery(key, val)).Explain(true);
+            var doc = db.GetCollection(Table.Name).Find(new QueryDocument { { key, val } }).Explain(true);
 
             var list = new List<MongoTreeNode>();
             BuildTreeNode(list, Guid.Empty, doc);

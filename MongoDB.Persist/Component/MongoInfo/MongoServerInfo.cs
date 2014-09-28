@@ -23,10 +23,13 @@ namespace MongoDB.Component
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-            var doc = adminDB.SendCommand(MongoDocument.CreateQuery("serverStatus", 1));
+            var rst = adminDB.RunCommand(new CommandDocument { { "serverStatus", 1 } });
 
             var list = new List<MongoTreeNode>();
-            BuildTreeNode(list, Guid.Empty, doc);
+            if (rst.Ok)
+            {
+                BuildTreeNode(list, Guid.Empty, rst.Response);
+            }
             return list;
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MongoDB.Bson;
 
 namespace MongoDB.Model
 {
@@ -18,5 +19,9 @@ namespace MongoDB.Model
         /// 列名
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 数据类型
+        /// </summary>
+        public BsonType Type { get; set; }
     }
 }

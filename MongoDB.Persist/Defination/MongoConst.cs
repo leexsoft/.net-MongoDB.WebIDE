@@ -32,6 +32,6 @@ namespace MongoDB.Defination
         /// <summary>
         /// 源表名称
         /// </summary>
-        public static readonly string SourcesTableName = "sources";
+        public static readonly string SourceTableName = "sources";
     }
 }

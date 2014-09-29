@@ -71,7 +71,7 @@ namespace MongoDB.Component
                     var mongo = new MongoClient(string.Format(MongoConst.ConnString, serverModel.Name));
                     var server = mongo.GetServer();
                     var adminDB = server.GetDatabase(MongoConst.AdminDBName);
-                    var rst = adminDB.RunCommand(new CommandDocument{{"listDatabases", 1}});
+                    var rst = adminDB.RunCommand(new CommandDocument { { "listDatabases", 1 } });
 
                     if (rst.Ok)
                     {
@@ -202,14 +202,15 @@ namespace MongoDB.Component
                             var field = new MongoFieldModel
                             {
                                 ID = Guid.NewGuid(),
-                                Name = item.ToString()
+                                Name = item.ToString(),
+                                Type = doc[item].BsonType
                             };
 
                             TreeNodes.Add(new MongoTreeNode
                             {
                                 ID = field.ID,
                                 PID = fieldNode.ID,
-                                Name = field.Name,
+                                Name = field.Name + string.Format(" ({0})", field.Type),
                                 Type = MongoTreeNodeType.Field
                             });
 

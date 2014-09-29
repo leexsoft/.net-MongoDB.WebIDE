@@ -18,9 +18,6 @@
         }
     };
 
-    var $tServer = $('#servertree');
-    var ztreeServer = $.fn.zTree.init($tServer, setting, zServerNodes);
-
-    var $tData = $('#infotree');
-    var ztreeData = $.fn.zTree.init($tData, setting, zDataNodes);
+    $.fn.zTree.init($('#servertree'), setting, zServerNodes);
+    $.fn.zTree.init($('#infotree'), setting, zDataNodes);
 });

@@ -38,7 +38,7 @@ namespace MongoDB.Component
                 var localDB = server.GetDatabase(MongoConst.LocalDBName);
                 if (stats.Response["ismaster"].AsBoolean)
                 {
-                    #region 主服务器信息
+                    #region 日志信息
                     var docs = localDB.GetCollection(MongoConst.OplogTableName).FindAll().SetLimit(10);
                     foreach (var doc in docs)
                     {
@@ -48,15 +48,8 @@ namespace MongoDB.Component
                 }
                 else
                 {
-                    #region 从服务器信息
-                    var doc = localDB.GetCollection(MongoConst.SourcesTableName).FindOne();
-                    if (doc["syncTo"] != null)
-                    {
-                        var logTime = doc["syncTo"].ToLocalTime();
-                        var now = DateTime.Now;
-                        double v = (now - logTime).TotalSeconds;
-                        doc["syncTo"] = doc["syncTo"] + "  =" + v + "s ago";
-                    }
+                    #region 源服务器信息
+                    var doc = localDB.GetCollection(MongoConst.SourceTableName).FindOne();
                     BuildTreeNode(dataInfo, Guid.Empty, doc);
                     #endregion
                 }

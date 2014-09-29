@@ -25,7 +25,7 @@
                             foreach (var name in Model.Data[0].Names)
                             {
                             <th>
-                                <span class="label label-info">@name</span>
+                                <span class="label label-info">@string.Format("{0} ({1})", name, Model.Data[0][name].BsonType)</span>
                             </th>
                             }
                         }
@@ -47,15 +47,19 @@
                                 {
                                         @doc[name].ToLocalTime()
                                 }
-                                else
+								else if (doc[name].IsBsonTimestamp)
                                 {
-                                        @doc[name]
-                                }
+                                        @doc[name].AsBsonTimestamp.Value.ToString()
+								}
+								else
+								{
+                                        @doc[name].ToString()
+								}
                                     }
                                 </td>
-                            }}
+							}}
                         </tr>
-                        }
+						}
                     }
                 </table>
             </div>
@@ -75,8 +79,8 @@
                         <div class="controls">
                             <select id="selField" class="span2">
                                 @{
-                                    foreach (var field in Model.Fields)
-                                    {
+									foreach (var field in Model.Fields)
+									{
                                     <option>@field.Name</option>
                                     }
                                 }

@@ -79,6 +79,7 @@
     <Compile Include="Models\ShowDataModel.cs" />
     <Compile Include="Models\ShowIndexModel.cs" />
     <Compile Include="Models\SaveIndexModel.cs" />
+    <Compile Include="Models\ShowReplicationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +104,7 @@
     <Content Include="Content\js\showdata.js" />
     <Content Include="Content\js\showprofile.js" />
     <Content Include="Content\js\servermanager.js" />
+    <Content Include="Content\js\showreplication.js" />
     <Content Include="Content\ztree\css\img\diy\1_close.png" />
     <Content Include="Content\ztree\css\img\diy\1_open.png" />
     <Content Include="Content\ztree\css\img\diy\2.png" />
@@ -179,6 +181,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\ServerManager.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DBAdmin\ShowReplication.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

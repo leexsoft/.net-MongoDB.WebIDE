@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\MongoContext\MongoServerContext.cs" />
+    <Compile Include="Component\MongoContext\MongoReplicationContext.cs" />
     <Compile Include="Component\MongoInfoFactory.cs" />
     <Compile Include="Component\MongoContext.cs" />
     <Compile Include="Component\MongoInfo\MongoServerInfo.cs" />

@@ -1,0 +1,42 @@
+﻿@using MongoDB.WebIDE.Models
+@using MongoDB.Driver
+@model ShowReplicationModel
+@section style{
+	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
+}
+@section script{
+	<script type="text/javascript">
+		var zServerNodes = @Html.Raw(Model.JsonServer);
+		var zDataNodes = @Html.Raw(Model.JsonData);
+	</script>
+	<script src="@Url.Content("~/Content/ztree/js/jquery.ztree.core-3.5.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Content/js/showreplication.js")" type="text/javascript"></script>
+}
+<input id="hdId" type="hidden" value="@Model.ID" />
+<div class="PageTitle">
+	<i class="icon-inbox"></i>&nbsp;<strong class="text-info">@Model.Title</strong>
+</div>
+<div class="accordion mt10" id="accordion1">
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">服务器信息</a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner alert-info">
+				<ul id="servertree" class="ztree">
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">同步信息</a>
+		</div>
+		<div id="collapseTwo" class="accordion-body collapse">
+			<div class="accordion-inner alert-info">
+				<ul id=infotree" class="ztree">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

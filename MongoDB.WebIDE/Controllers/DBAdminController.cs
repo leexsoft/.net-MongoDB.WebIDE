@@ -46,7 +46,23 @@ namespace MongoDB.WebIDE.Controllers
             return View(model);
         }
         #endregion
-        
+
+        #region 主从信息
+        public ActionResult ShowReplication(string id)
+        {
+            var mongo = new MongoReplicationContext(id);
+            var hash = mongo.GetReplicationInfo();
+            var model = new ShowReplicationModel
+            {
+                ID = id,
+                Title = mongo.Server.FullInfo,
+                JsonServer = JsonConvert.SerializeObject(hash[0]),
+                JsonData = JsonConvert.SerializeObject(hash[1])
+            };
+            return View(model);
+        }
+        #endregion
+
         #region Prfile优化
         public ActionResult ShowProfile(string id)
         {

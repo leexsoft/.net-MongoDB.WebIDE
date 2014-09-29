@@ -21,7 +21,13 @@
 	<ul id="infotree" class="ztree">
 	</ul>
 </div>
-@if (Model.Type == (int)MongoTreeNodeType.Database)
+@if (Model.Type == (int)MongoTreeNodeType.Server)
+{
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowReplication?id=@Model.ID">同步信息查看</a>
+	</div>
+}
+else if (Model.Type == (int)MongoTreeNodeType.Database)
 {
 	<div class="accordion-heading alert-success">
 		<a class="accordion-toggle" href="ShowProfile?id=@Model.ID">Profile优化</a>

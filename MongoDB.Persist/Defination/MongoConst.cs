@@ -16,10 +16,22 @@ namespace MongoDB.Defination
         /// 管理数据库名称
         /// </summary>
         public static readonly string AdminDBName = "admin";
+        /// <summary>
+        /// 本地数据库名称
+        /// </summary>
+        public static readonly string LocalDBName = "local";
 
         /// <summary>
         /// 索引表名称
         /// </summary>
         public static readonly string IndexTableName = "system.indexes";
+        /// <summary>
+        /// 主服务器日志表名称
+        /// </summary>
+        public static readonly string OplogTableName = "oplog.$main";
+        /// <summary>
+        /// 源表名称
+        /// </summary>
+        public static readonly string SourcesTableName = "sources";
     }
 }

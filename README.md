@@ -8,9 +8,9 @@
 ========================
 <ol>
 <li>利用bootstrap(Version 2.3.2)和mvc改写的MongodbManagementStudio</li>
+<li>改为使用mongodb .net的官方驱动</li>
 <li>使用了ztree控件</li>
 <li>使用并行技术读取mongodb信息，解决了填充数据时的线程安全问题</li>
-<li>增加索引管理</li>
 </ol>
 
 功能简介

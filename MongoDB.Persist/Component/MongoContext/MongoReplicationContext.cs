@@ -40,10 +40,14 @@ namespace MongoDB.Component
                 {
                     #region 日志信息
                     var docs = localDB.GetCollection(MongoConst.OplogTableName).FindAll().SetLimit(10);
-                    foreach (var doc in docs)
+                    var doc = new BsonDocument();
+                    var idx = 0;
+                    foreach (var d in docs)
                     {
-                        BuildTreeNode(dataInfo, Guid.Empty, doc);
+                        idx++;
+                        doc.Add("日志 No." + idx, d);
                     }
+                    BuildTreeNode(dataInfo, Guid.Empty, doc);
                     #endregion
                 }
                 else

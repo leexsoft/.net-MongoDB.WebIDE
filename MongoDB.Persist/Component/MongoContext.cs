@@ -83,7 +83,7 @@ namespace MongoDB.Component
                         var dbList = dbDoc["databases"].AsBsonArray;
                         if (dbList != null)
                         {
-                            dbList.AsParallel().ForAll(item =>
+                            dbList.ToList().ForEach(item =>
                             {
                                 var db = new MongoDatabaseModel
                                 {

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using MongoDB.Bson;
-using MongoDB.Defination;
+﻿using MongoDB.Model;
+using System.Collections.Generic;
 
 namespace MongoDB.WebIDE.Models
 {
@@ -10,8 +9,6 @@ namespace MongoDB.WebIDE.Models
 
         public string Title { get; set; }
 
-        public List<MongoTreeNode> Fields { get; set; }
-
-        public List<BsonDocument> Data { get; set; }
+        public List<MongoFieldModel> Fields { get; set; }
     }
 }

@@ -23,28 +23,50 @@ namespace MongoDB.Component
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
-        public List<MongoTreeNode> GetFieldNodes()
+        public List<MongoFieldModel> GetFields()
         {
-            return MongoCache.GetTreeNodes().Where(n => n.PID == ID).ToList();
+            var fieldNodes = MongoCache.GetTreeNodes().Where(n => n.PID == ID).ToList();
+
+            var list = new List<MongoFieldModel>();
+            foreach (var node in fieldNodes)
+            {
+                list.Add(MongoCache.GetMongoObject(node.ID) as MongoFieldModel);
+            }
+            return list;
         }
 
-        public List<BsonDocument> GetData(int limit)
+        public List<BsonDocument> GetData(string jsonfind, string jsonsort, int skip, int limit)
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
-            var db = server.GetDatabase(Database.Name);
-
-            var query = db.GetCollection(Table.Name).FindAll();
-            query.Limit = limit;
+            var db = server.GetDatabase(Database.Name);                        
+            
+            var findDoc = string.IsNullOrEmpty(jsonfind) ? new QueryDocument() : new QueryDocument(BsonDocument.Parse(jsonfind));
+            var sortDoc = string.IsNullOrEmpty(jsonsort) ? new SortByDocument() : new SortByDocument(BsonDocument.Parse(jsonsort));
+            var query = db.GetCollection(Table.Name).Find(findDoc);      
+            query.SetSortOrder(sortDoc);
+            if (skip > 0)
+            {
+                query.Skip = skip;
+            }
+            if (limit > 0)
+            {
+                query.Limit = limit;
+            }
             return query.ToList();
         }
 
-        public List<MongoTreeNode> Explain(string key, string val)
+        public List<MongoTreeNode> Explain(string jsonfind, string jsonsort)
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
-            var doc = db.GetCollection(Table.Name).Find(new QueryDocument { { key, val } }).Explain(true);
+
+            var findDoc = string.IsNullOrEmpty(jsonfind) ? new QueryDocument() : new QueryDocument(BsonDocument.Parse(jsonfind));
+            var sortDoc = string.IsNullOrEmpty(jsonsort) ? new SortByDocument() : new SortByDocument(BsonDocument.Parse(jsonsort));
+            var query = db.GetCollection(Table.Name).Find(findDoc);
+            query.SetSortOrder(sortDoc);
+            var doc = query.Explain(true);
 
             var list = new List<MongoTreeNode>();
             BuildTreeNode(list, Guid.Empty, doc);

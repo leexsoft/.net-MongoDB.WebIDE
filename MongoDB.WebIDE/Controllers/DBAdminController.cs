@@ -115,17 +115,25 @@ namespace MongoDB.WebIDE.Controllers
             {
                 ID = id,
                 Title = mongo.Table.FullInfo,
-                Fields = mongo.GetFieldNodes(),
-                Data = mongo.GetData(50)
+                Fields = mongo.GetFields()
             };
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult Explain(string id, string key, string val)
+        public JsonResult GetData(string id, string jsonfind, string jsonsort, int skip, int limit)
         {
             var mongo = new MongoDataContext(id);
-            var list = mongo.Explain(key, val);
+            var list = mongo.GetData(jsonfind, jsonsort, skip, limit);
+            var str = JsonConvert.SerializeObject(list);
+            return Json(str);
+        }
+
+        [HttpPost]
+        public JsonResult Explain(string id, string jsonfind, string jsonsort)
+        {
+            var mongo = new MongoDataContext(id);
+            var list = mongo.Explain(jsonfind, jsonsort);
             return Json(list);
         }
         #endregion

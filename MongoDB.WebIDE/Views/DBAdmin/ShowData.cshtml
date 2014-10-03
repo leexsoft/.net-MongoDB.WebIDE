@@ -18,49 +18,28 @@
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">表数据</a>
         </div>
         <div id="collapseOne" class="accordion-body collapse in">
-            <div class="accordion-inner datatable">
-                <table class="table table-bordered table-striped table-hover">
+            <div class="accordion-inner">
+                <div class="form-inline">
+                    find:<input type="text" class="span5" id="txtFind1" />
+                    sort:<input type="text" class="span2" id="txtSort1" />
+                    skip:<input type="text" class="span1" id="txtSkip" />
+                    <label class="checkbox">
+                        <input type="checkbox" id="chkLimit" checked />limit:
+                    </label>
+                    <input type="text" class="span1" id="txtLimit" value="50" />
+                    <a class="btn btn-primary btn-small" id="btnFind">查询</a>
+                </div>
+                <table class="table table-bordered table-striped table-hover mt5">
                     <tr>
                         @{
-                            foreach (var name in Model.Data[0].Names)
+                            foreach (var field in Model.Fields)
                             {
                             <th>
-                                <span class="label label-info">@string.Format("{0} ({1})", name, Model.Data[0][name].BsonType)</span>
+                                <span class="label label-info">@string.Format("{0} ({1})", field.Name, field.Type)</span>
                             </th>
                             }
                         }
                     </tr>
-                    @{
-                        foreach (var doc in Model.Data)
-                        {
-                        <tr>
-                            @{
-                            foreach (var name in doc.Names)
-                            {
-                                <td>
-                                    @{
-                                if (doc[name].IsBsonDocument)
-                                {
-                                        <text>document</text>
-                                }
-                                else if (doc[name].IsBsonDateTime)
-                                {
-                                        @doc[name].ToLocalTime()
-                                }
-								else if (doc[name].IsBsonTimestamp)
-                                {
-                                        @doc[name].AsBsonTimestamp.Value.ToString()
-								}
-								else
-								{
-                                        @doc[name].ToString()
-								}
-                                    }
-                                </td>
-							}}
-                        </tr>
-						}
-                    }
                 </table>
             </div>
         </div>
@@ -71,24 +50,10 @@
         </div>
         <div id="collapseTwo" class="accordion-body collapse alert-info">
             <div class="accordion-inner">
-                <div class="form-horizontal">
-                    <div class="control-group">
-                        <label class="control-label">
-                            find:
-                        </label>
-                        <div class="controls">
-                            <select id="selField" class="span2">
-                                @{
-									foreach (var field in Model.Fields)
-									{
-                                    <option>@field.Name</option>
-                                    }
-                                }
-                            </select>
-                            <input type="text" class="input-large" id="txtFind" />
-                            <a class="btn btn-primary btn-small" id="btnExplain">执行</a>
-                        </div>
-                    </div>
+                <div class="form-inline">
+                    find:<input type="text" class="span5" id="txtFind2" />
+                    sort:<input type="text" class="span2" id="txtSort2" />
+                    <a class="btn btn-primary btn-small" id="btnExplain">执行</a>
                 </div>
                 <ul id="explaintree" class="ztree">
                 </ul>

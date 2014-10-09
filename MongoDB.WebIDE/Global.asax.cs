@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using MongoDB.Persist.Web.Atrribute;
 
 namespace MongoDB.WebIDE
 {
@@ -11,6 +12,7 @@ namespace MongoDB.WebIDE
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new LogExceptionAttribute());
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -29,6 +31,7 @@ namespace MongoDB.WebIDE
         {
             log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
+
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);

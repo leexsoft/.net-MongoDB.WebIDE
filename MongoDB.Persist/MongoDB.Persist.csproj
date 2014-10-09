@@ -81,6 +81,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\MongoServerModel.cs" />
     <Compile Include="Web\Atrribute\CacheValidAttribute.cs" />
+    <Compile Include="Web\Atrribute\JsonExceptionAttribute.cs" />
+    <Compile Include="Web\Atrribute\LogExceptionAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

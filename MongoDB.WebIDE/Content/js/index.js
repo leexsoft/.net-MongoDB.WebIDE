@@ -53,8 +53,12 @@
         cache: false,
         dataType: 'json',
         success: function (rst) {
-            var zNodes = rst;
-            zTreeObj = $.fn.zTree.init($t, setting, zNodes);
+            if (rst.Success) {
+                var zNodes = rst.Result;
+                zTreeObj = $.fn.zTree.init($t, setting, zNodes);
+            } else {
+                alert(rst.Message);
+            }
         },
         error: function () {
             alert('请求发生异常，请重试');

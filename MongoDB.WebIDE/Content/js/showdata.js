@@ -43,20 +43,23 @@
             data: { id: id, jsonfind: find, jsonsort: sort, skip: skip, limit: limit },
             dataType: 'json',
             success: function (rst) {
-                $('table tr').not(':first').remove();
-                $('#collapseOne>.accordion-inner').addClass('datatable');
-
-                var list = $.parseJSON(rst);
-                var i = 0;
-                for (i = 0; i < list.length; i++) {
-                    var html = '<tr>';
-                    var item = list[i];
-                    var j = 0;
-                    for (j = 0; j < item.length; j++) {
-                        html += '<td>'+item[j].Value+'</td>'
+                if (rst.Success) {
+                    $('table tr:not(:first)').remove();
+                    $('#collapseOne>.accordion-inner').addClass('datatable');
+                    var list = $.parseJSON(rst.Result);
+                    var i = 0;
+                    for (i = 0; i < list.length; i++) {
+                        var html = '<tr>';
+                        var item = list[i];
+                        var j = 0;
+                        for (j = 0; j < item.length; j++) {
+                            html += '<td>' + item[j].Value + '</td>';
+                        }
+                        html += '</tr>';
+                        $('table').append(html);
                     }
-                    html += '</tr>';
-                    $('table').append(html);
+                } else {
+                    alert(rst.Message);
                 }
             },
             error: function () {
@@ -78,8 +81,12 @@
             data: { id: id, jsonfind: find, jsonsort: sort },
             dataType: 'json',
             success: function (rst) {
-                var zNodes = rst;
-                var ztreeObj = $.fn.zTree.init($t, setting, zNodes);
+                if (rst.Success) {
+                    var zNodes = rst.Result;
+                    var ztreeObj = $.fn.zTree.init($t, setting, zNodes);
+                } else {
+                    alert(rst.Message);
+                }
             },
             error: function () {
                 alert('请求发生异常，请重试');

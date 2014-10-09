@@ -62,7 +62,7 @@
             success: function (rst) {
                 if (rst.Success) {
                     $('table tr:not(:first)').remove();
-                    var list = rst.Message;
+                    var list = rst.Result;
                     var i = 0;
                     for (i = 0; i < list.length; i++) {
                         var datetime = jsonDateParser(list[i].Timestamp);

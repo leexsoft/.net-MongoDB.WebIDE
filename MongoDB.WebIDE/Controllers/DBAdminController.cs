@@ -77,33 +77,21 @@ namespace MongoDB.WebIDE.Controllers
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult SetProfile(string id, int level, int slowms)
         {
             var mongo = new MongoProfileContext(id);
-            try
-            {
-                mongo.SetProfile(level, slowms);
-                return Json(new { Success = true, Message = "Profile设置成功" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
+            mongo.SetProfile(level, slowms);
+            return Json(new { Success = true, Message = "Profile设置成功" });
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult GetProfileData(string id, int limit)
         {
             var mongo = new MongoProfileContext(id);
-            try
-            {
-                var list = mongo.GetProfileData(limit);
-                return Json(new { Success = true, Message = list });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
+            var list = mongo.GetProfileData(limit);
+            return Json(new { Success = true, Message = string.Empty, Result = list });
         }
         #endregion
 
@@ -121,20 +109,22 @@ namespace MongoDB.WebIDE.Controllers
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult GetData(string id, string jsonfind, string jsonsort, int skip, int limit)
         {
             var mongo = new MongoDataContext(id);
             var list = mongo.GetData(jsonfind, jsonsort, skip, limit);
             var str = JsonConvert.SerializeObject(list);
-            return Json(str);
+            return Json(new { Success = true, Message = string.Empty, Result = str });
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult Explain(string id, string jsonfind, string jsonsort)
         {
             var mongo = new MongoDataContext(id);
             var list = mongo.Explain(jsonfind, jsonsort);
-            return Json(list);
+            return Json(new { Success = true, Message = string.Empty, Result = list });
         }
         #endregion
 
@@ -153,33 +143,21 @@ namespace MongoDB.WebIDE.Controllers
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult CreateIndex(string id, string data)
         {
             var mongo = new MongoIndexContext(id);
-            try
-            {
-                mongo.CreateIndex(data);
-                return Json(new { Success = true, Message = "索引创建成功" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
+            mongo.CreateIndex(data);
+            return Json(new { Success = true, Message = "索引创建成功" });
         }
 
         [HttpPost]
+        [JsonException]
         public JsonResult DeleteIndex(string id, string guid)
         {
             var mongo = new MongoIndexContext(id);
-            try
-            {
-                mongo.DeleteIndex(guid);
-                return Json(new { Success = true, Message = "索引删除成功" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
+            mongo.DeleteIndex(guid);
+            return Json(new { Success = true, Message = "索引删除成功" });
         }
         #endregion
     }

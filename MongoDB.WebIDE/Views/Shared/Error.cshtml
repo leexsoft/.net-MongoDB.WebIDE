@@ -1,15 +1,19 @@
-﻿@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Error</title>
-</head>
-<body>
-    <h2>
-        Sorry, an error occurred while processing your request.
-    </h2>
-</body>
-</html>
+﻿<br />
+<div class="container">
+	<div class="alert alert-error">
+		<h4>
+			Exception:</h4>
+		<br />
+		<p>
+			There was a <b>@Model.Exception.GetType().Name</b> while rendering <b>@Model.ControllerName</b>'s <b>@Model.ActionName</b> action.</p>
+		<p>
+			@Model.Exception.Message
+		</p>
+	</div>
+	<div class="alert">
+		<h4>
+			Stack trace:</h4>
+		<br />
+		<pre>@Model.Exception.StackTrace</pre>
+	</div>
+</div>

@@ -2,12 +2,12 @@
     $('[action]').click(function () {
         if (window.confirm('确认需要删除此索引吗？')) {
             var id = $('#hdId').val();
-            var guid = $(this).attr('guid');
+            var idx = $(this).attr('idx');
             $.ajax({
                 url: '/DBAdmin/DeleteIndex/',
                 type: 'POST',
                 cache: false,
-                data: { id: id, guid: guid },
+                data: { id: id, idx: idx },
                 dataType: 'json',
                 success: function (rst) {
                     alert(rst.Message);
@@ -49,7 +49,7 @@
         var keys = [];
         $trs.each(function () {
             var $tds = $(this).find('td');
-            var field = $tds.eq(0).text();
+            var field = $tds.eq(0).text().split(' ')[0];
             var order = $tds.eq(1).attr('value');
             keys.push({ Field: field, Order: order });
         });

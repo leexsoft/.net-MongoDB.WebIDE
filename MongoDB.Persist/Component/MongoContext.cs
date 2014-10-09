@@ -28,13 +28,13 @@ namespace MongoDB.Component
 
         private void GetServer()
         {
-            var serverNodes = new HashSet<Guid>();
+            var serverNodes = new HashSet<uint>();
             var xml = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/servers.config"));
             xml.Descendants("Server").ToList().ForEach(item =>
             {
                 var serverModel = new MongoServerModel
                 {
-                    ID = Guid.NewGuid(),
+                    ID = MongoConst.GetRandomId(),
                     IP = item.Attribute("IP").Value,
                     Port = item.Attribute("Port").Value
                 };
@@ -46,7 +46,7 @@ namespace MongoDB.Component
                 TreeNodes.Add(new MongoTreeNode
                 {
                     ID = serverModel.ID,
-                    PID = Guid.Empty,
+                    PID = 0,
                     Name = serverModel.Name,
                     Type = MongoTreeNodeType.Server
                 });
@@ -58,11 +58,11 @@ namespace MongoDB.Component
             Parallel.ForEach(serverNodes, id => GetDB(id));
         }
 
-        private void GetDB(Guid guid)
+        private void GetDB(uint serverid)
         {
-            if (MongoObjects.ContainsKey(guid))
+            if (MongoObjects.ContainsKey(serverid))
             {
-                var serverModel = MongoObjects[guid] as MongoServerModel;
+                var serverModel = MongoObjects[serverid] as MongoServerModel;
                 var watch = new Stopwatch();
                 watch.Start();
 
@@ -79,7 +79,7 @@ namespace MongoDB.Component
                         serverModel.IsOK = true;
                         serverModel.TotalSize = dbDoc["totalSize"].AsDouble;
 
-                        var dbNodes = new HashSet<Guid>();
+                        var dbNodes = new HashSet<uint>();
                         var dbList = dbDoc["databases"].AsBsonArray;
                         if (dbList != null)
                         {
@@ -87,7 +87,7 @@ namespace MongoDB.Component
                             {
                                 var db = new MongoDatabaseModel
                                 {
-                                    ID = Guid.NewGuid(),
+                                    ID = MongoConst.GetRandomId(),
                                     Name = item["name"].AsString,
                                     Size = item["sizeOnDisk"].AsDouble
                                 };
@@ -120,11 +120,11 @@ namespace MongoDB.Component
             }
         }
 
-        private void GetCollection(MongoServer server, Guid guid)
+        private void GetCollection(MongoServer server, uint dbid)
         {
-            if (MongoObjects.ContainsKey(guid))
+            if (MongoObjects.ContainsKey(dbid))
             {
-                var database = MongoObjects[guid] as MongoDatabaseModel;
+                var database = MongoObjects[dbid] as MongoDatabaseModel;
                 var watch = new Stopwatch();
                 watch.Start();
 
@@ -134,13 +134,13 @@ namespace MongoDB.Component
                     var collections = db.GetCollectionNames();
                     if (collections != null)
                     {
-                        var tblNodes = new HashSet<Guid>();
-                        collections.Where(t => !t.Contains("$") && !t.Contains(MongoConst.IndexTableName)).ToList().ForEach(t =>
+                        var tblNodes = new HashSet<uint>();
+                        collections.Where(t => !t.Contains("$") && !t.Contains(MongoConst.IndexTableName) && !t.Contains(MongoConst.ProfileTableName)).ToList().ForEach(t =>
                         {
                             var table = db.GetCollection(t);
                             var tbl = new MongoCollectionModel
                             {
-                                ID = Guid.NewGuid(),
+                                ID = MongoConst.GetRandomId(),
                                 Name = t,
                                 Namespace = table.FullName,
                                 TotalCount = table.Count()
@@ -172,11 +172,11 @@ namespace MongoDB.Component
             }
         }
 
-        private void GetFieldAndIndex(MongoDatabase db, Guid guid)
+        private void GetFieldAndIndex(MongoDatabase db, uint tblid)
         {
-            if (MongoObjects.ContainsKey(guid))
+            if (MongoObjects.ContainsKey(tblid))
             {
-                var table = MongoObjects[guid] as MongoCollectionModel;
+                var table = MongoObjects[tblid] as MongoCollectionModel;
                 var watch = new Stopwatch();
                 watch.Start();
 
@@ -186,7 +186,7 @@ namespace MongoDB.Component
                     //字段类型信息节点
                     var fieldNode = new MongoTreeNode
                     {
-                        ID = Guid.NewGuid(),
+                        ID = MongoConst.GetRandomId(),
                         PID = table.ID,
                         Name = "表信息",
                         Type = MongoTreeNodeType.TableFiller
@@ -201,7 +201,7 @@ namespace MongoDB.Component
                         {
                             var field = new MongoFieldModel
                             {
-                                ID = Guid.NewGuid(),
+                                ID = MongoConst.GetRandomId(),
                                 Name = item.ToString(),
                                 Type = doc[item].BsonType
                             };
@@ -223,7 +223,7 @@ namespace MongoDB.Component
                     //索引类型信息节点
                     var indexNode = new MongoTreeNode
                     {
-                        ID = Guid.NewGuid(),
+                        ID = MongoConst.GetRandomId(),
                         PID = table.ID,
                         Name = "索引",
                         Type = MongoTreeNodeType.IndexFiller
@@ -238,7 +238,7 @@ namespace MongoDB.Component
                         {
                             var index = new MongoIndexModel
                             {
-                                ID = Guid.NewGuid(),
+                                ID = MongoConst.GetRandomId(),
                                 Name = idx["name"].AsString,
                                 Namespace = idx["ns"].AsString,
                                 Unique = idx.Contains("unique") ? (idx["unique"].AsDouble == 1.0 ? true : false) : false,

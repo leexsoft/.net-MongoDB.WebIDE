@@ -32,7 +32,7 @@ namespace MongoDB.Component
             {
                 list.Add(new MongoServerModel
                 {
-                    ID = Guid.NewGuid(),
+                    ID = MongoConst.GetRandomId(),
                     IP = item.Attribute("IP").Value,
                     Port = item.Attribute("Port").Value
                 });

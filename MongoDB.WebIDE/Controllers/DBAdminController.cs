@@ -13,7 +13,7 @@ namespace MongoDB.WebIDE.Controllers
     public class DBAdminController : Controller
     {
         #region 查看统计信息
-        public ActionResult ShowInfo(string id, int type)
+        public ActionResult ShowInfo(uint id, int type)
         {
             var model = new ShowInfoModel
             {
@@ -22,20 +22,19 @@ namespace MongoDB.WebIDE.Controllers
             };
 
             //获取描述
-            var gid = Guid.Parse(id);
             if (type == (int)MongoTreeNodeType.Server)
             {
-                var server = MongoCache.GetMongoObject(gid) as MongoServerModel;
+                var server = MongoCache.GetMongoObject(id) as MongoServerModel;
                 model.Title = server.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Database)
             {
-                var database = MongoCache.GetMongoObject(gid) as MongoDatabaseModel;
+                var database = MongoCache.GetMongoObject(id) as MongoDatabaseModel;
                 model.Title = database.FullInfo;
             }
             else if (type == (int)MongoTreeNodeType.Collection)
             {
-                var table = MongoCache.GetMongoObject(gid) as MongoCollectionModel;
+                var table = MongoCache.GetMongoObject(id) as MongoCollectionModel;
                 model.Title = table.FullInfo;
             }
 
@@ -48,7 +47,7 @@ namespace MongoDB.WebIDE.Controllers
         #endregion
 
         #region 主从信息
-        public ActionResult ShowReplication(string id)
+        public ActionResult ShowReplication(uint id)
         {
             var mongo = new MongoReplicationContext(id);
             var hash = mongo.GetReplicationInfo();
@@ -64,7 +63,7 @@ namespace MongoDB.WebIDE.Controllers
         #endregion
 
         #region Prfile优化
-        public ActionResult ShowProfile(string id)
+        public ActionResult ShowProfile(uint id)
         {
             var mongo = new MongoProfileContext(id);
             var model = new ShowProfileModel
@@ -78,7 +77,7 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult SetProfile(string id, int level, int slowms)
+        public JsonResult SetProfile(uint id, int level, int slowms)
         {
             var mongo = new MongoProfileContext(id);
             mongo.SetProfile(level, slowms);
@@ -87,7 +86,7 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult GetProfileData(string id, int limit)
+        public JsonResult GetProfileData(uint id, int limit)
         {
             var mongo = new MongoProfileContext(id);
             var list = mongo.GetProfileData(limit);
@@ -96,7 +95,7 @@ namespace MongoDB.WebIDE.Controllers
         #endregion
 
         #region 查询数据
-        public ActionResult ShowData(string id)
+        public ActionResult ShowData(uint id)
         {
             var mongo = new MongoDataContext(id);
             var model = new ShowDataModel
@@ -110,7 +109,7 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult GetData(string id, string jsonfind, string jsonsort, int skip, int limit)
+        public JsonResult GetData(uint id, string jsonfind, string jsonsort, int skip, int limit)
         {
             var mongo = new MongoDataContext(id);
             var list = mongo.GetData(jsonfind, jsonsort, skip, limit);
@@ -120,7 +119,7 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult Explain(string id, string jsonfind, string jsonsort)
+        public JsonResult Explain(uint id, string jsonfind, string jsonsort)
         {
             var mongo = new MongoDataContext(id);
             var list = mongo.Explain(jsonfind, jsonsort);
@@ -129,7 +128,7 @@ namespace MongoDB.WebIDE.Controllers
         #endregion
 
         #region 索引管理
-        public ActionResult ShowIndex(string id)
+        public ActionResult ShowIndex(uint id)
         {
             var mongo = new MongoIndexContext(id);
             var model = new ShowIndexModel
@@ -144,7 +143,7 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult CreateIndex(string id, string data)
+        public JsonResult CreateIndex(uint id, string data)
         {
             var mongo = new MongoIndexContext(id);
             mongo.CreateIndex(data);
@@ -153,10 +152,10 @@ namespace MongoDB.WebIDE.Controllers
 
         [HttpPost]
         [JsonException]
-        public JsonResult DeleteIndex(string id, string guid)
+        public JsonResult DeleteIndex(uint id, uint idx)
         {
             var mongo = new MongoIndexContext(id);
-            mongo.DeleteIndex(guid);
+            mongo.DeleteIndex(idx);
             return Json(new { Success = true, Message = "索引删除成功" });
         }
         #endregion

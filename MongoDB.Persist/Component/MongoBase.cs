@@ -10,8 +10,8 @@ namespace MongoDB.Component
     public class MongoBase
     {
         protected readonly string ConnString = "Server={0}";
-        
-        protected Guid ID { get; set; }
+
+        protected uint ID { get; set; }
         public MongoServerModel Server { get; set; }
         public MongoDatabaseModel Database { get; set; }
         public MongoCollectionModel Table { get; set; }
@@ -22,13 +22,13 @@ namespace MongoDB.Component
         /// <param name="list"></param>
         /// <param name="pid"></param>
         /// <param name="doc"></param>
-        protected void BuildTreeNode(List<MongoTreeNode> list, Guid pid, BsonDocument doc)
+        protected void BuildTreeNode(List<MongoTreeNode> list, uint pid, BsonDocument doc)
         {
             foreach (var key in doc.Names)
             {
                 var node = new MongoTreeNode
                 {
-                    ID = Guid.NewGuid(),
+                    ID = MongoConst.GetRandomId(),
                     PID = pid
                 };
 

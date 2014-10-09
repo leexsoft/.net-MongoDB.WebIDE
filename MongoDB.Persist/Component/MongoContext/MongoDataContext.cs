@@ -10,9 +10,9 @@ namespace MongoDB.Component
 {
     public class MongoDataContext : MongoBase
     {
-        public MongoDataContext(string id)
+        public MongoDataContext(uint id)
         {
-            ID = Guid.Parse(id);
+            ID = id;
             var fieldNode = MongoCache.GetTreeNode(ID);
 
             var tbNode = MongoCache.GetTreeNode(fieldNode.PID);
@@ -69,7 +69,7 @@ namespace MongoDB.Component
             var doc = query.Explain(true);
 
             var list = new List<MongoTreeNode>();
-            BuildTreeNode(list, Guid.Empty, doc);
+            BuildTreeNode(list, 0, doc);
             return list;
         }
     }

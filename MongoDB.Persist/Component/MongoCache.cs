@@ -32,10 +32,10 @@ namespace MongoDB.Component
             return nodes;
         }
 
-        public static MongoTreeNode GetTreeNode(Guid guid)
+        public static MongoTreeNode GetTreeNode(uint id)
         {
             var hash = GetTreeNodes();
-            return hash.Single(i => i.ID == guid);
+            return hash.Single(i => i.ID == id);
         }
 
         public static Hashtable GetMongoObjects()
@@ -51,10 +51,10 @@ namespace MongoDB.Component
             return dict;
         }
 
-        public static object GetMongoObject(Guid guid)
+        public static object GetMongoObject(uint id)
         {
             var dict = GetMongoObjects();
-            return dict.ContainsKey(guid) ? dict[guid] : null;
+            return dict.ContainsKey(id) ? dict[id] : null;
         }
 
         public static void Clear()

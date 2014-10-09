@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Security.Cryptography;
+using System;
 
 namespace MongoDB.Defination
 {
@@ -26,6 +27,10 @@ namespace MongoDB.Defination
         /// </summary>
         public static readonly string IndexTableName = "system.indexes";
         /// <summary>
+        /// profile表名称
+        /// </summary>
+        public static readonly string ProfileTableName = "system.profile";
+        /// <summary>
         /// 主服务器日志表名称
         /// </summary>
         public static readonly string OplogTableName = "oplog.$main";
@@ -33,5 +38,22 @@ namespace MongoDB.Defination
         /// 源表名称
         /// </summary>
         public static readonly string SourceTableName = "sources";
+
+        /// <summary>
+        /// 随机数的步长
+        /// </summary>
+        private static readonly int StepLength = 8;
+        /// <summary>
+        /// 生成随机数
+        /// </summary>
+        /// <returns></returns>
+        public static uint GetRandomId()
+        {
+            var bytes = new byte[StepLength];
+            var provider = new RNGCryptoServiceProvider();
+            provider.GetNonZeroBytes(bytes);
+
+            return BitConverter.ToUInt32(bytes, 0);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace MongoDB.Model
         /// <summary>
         /// 唯一值
         /// </summary>
-        public Guid ID { get; set; }
+        public uint ID { get; set; }
         /// <summary>
         /// 数据库名称
         /// </summary>

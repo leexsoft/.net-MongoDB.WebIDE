@@ -13,11 +13,11 @@ namespace MongoDB.Defination
         /// <summary>
         /// 唯一值
         /// </summary>
-        public Guid ID { get; set; }
+        public uint ID { get; set; }
         /// <summary>
         /// 父节点ID
         /// </summary>
-        public Guid PID { get; set; }
+        public uint PID { get; set; }
         /// <summary>
         /// 名称
         /// </summary>

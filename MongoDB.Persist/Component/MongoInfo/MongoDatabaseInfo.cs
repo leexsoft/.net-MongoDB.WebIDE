@@ -8,12 +8,10 @@ namespace MongoDB.Component
 {
     public class MongoDatabaseInfo : MongoBaseInfo
     {
-        public MongoDatabaseInfo(string id)
+        public MongoDatabaseInfo(uint id)
         {
-            ID = Guid.Parse(id);
-
-            var dbNode = MongoCache.GetTreeNode(ID);
-            Database = MongoCache.GetMongoObject(ID) as MongoDatabaseModel;
+            var dbNode = MongoCache.GetTreeNode(id);
+            Database = MongoCache.GetMongoObject(id) as MongoDatabaseModel;
             var serverNode = MongoCache.GetTreeNode(dbNode.PID);
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
@@ -32,7 +30,7 @@ namespace MongoDB.Component
             var list = new List<MongoTreeNode>();
             if (rst.Ok)
             {
-                BuildTreeNode(list, Guid.Empty, rst.Response);
+                BuildTreeNode(list, 0, rst.Response);
             }
             return list;
         }

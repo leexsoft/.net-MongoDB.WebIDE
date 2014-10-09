@@ -11,11 +11,9 @@ namespace MongoDB.Component
 {
     public class MongoReplicationContext : MongoBase
     {
-        public MongoReplicationContext(string id)
+        public MongoReplicationContext(uint id)
         {
-            var guid = Guid.Parse(id);
-
-            var serverNode = MongoCache.GetTreeNode(guid);
+            var serverNode = MongoCache.GetTreeNode(id);
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
 
@@ -32,7 +30,7 @@ namespace MongoDB.Component
             var dataInfo = new List<MongoTreeNode>();
             if (stats.Ok)
             {
-                BuildTreeNode(serverInfo, Guid.Empty, stats.Response);
+                BuildTreeNode(serverInfo, 0, stats.Response);
                 hash.Add(0, serverInfo);
 
                 var localDB = server.GetDatabase(MongoConst.LocalDBName);
@@ -47,14 +45,14 @@ namespace MongoDB.Component
                         idx++;
                         doc.Add("日志 No." + idx, d);
                     }
-                    BuildTreeNode(dataInfo, Guid.Empty, doc);
+                    BuildTreeNode(dataInfo, 0, doc);
                     #endregion
                 }
                 else
                 {
                     #region 源服务器信息
                     var doc = localDB.GetCollection(MongoConst.SourceTableName).FindOne();
-                    BuildTreeNode(dataInfo, Guid.Empty, doc);
+                    BuildTreeNode(dataInfo, 0, doc);
                     #endregion
                 }
                 hash.Add(1, dataInfo);

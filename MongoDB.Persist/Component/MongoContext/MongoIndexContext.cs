@@ -11,9 +11,9 @@ namespace MongoDB.Component
 {
     public class MongoIndexContext : MongoBase
     {
-        public MongoIndexContext(string id)
+        public MongoIndexContext(uint id)
         {
-            ID = Guid.Parse(id);
+            ID = id;
             var idxNode = MongoCache.GetTreeNode(ID);
 
             var tbNode = MongoCache.GetTreeNode(idxNode.PID);
@@ -89,13 +89,13 @@ namespace MongoDB.Component
         /// 删除索引
         /// </summary>
         /// <param name="name"></param>
-        public void DeleteIndex(string guid)
+        public void DeleteIndex(uint id)
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
 
-            var idx = MongoCache.GetMongoObject(Guid.Parse(guid)) as MongoIndexModel;
+            var idx = MongoCache.GetMongoObject(id) as MongoIndexModel;
             var tbl = db.GetCollection(Table.Name);
             tbl.DropIndex(idx.Keys.Select(k => k.FieldName).ToArray());
 

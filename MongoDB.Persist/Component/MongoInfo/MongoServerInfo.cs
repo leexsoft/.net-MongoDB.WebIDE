@@ -8,10 +8,9 @@ namespace MongoDB.Component
 {
     public class MongoServerInfo : MongoBaseInfo
     {
-        public MongoServerInfo(string id)
+        public MongoServerInfo(uint id)
         {
-            ID = Guid.Parse(id);
-            Server = MongoCache.GetMongoObject(ID) as MongoServerModel;
+            Server = MongoCache.GetMongoObject(id) as MongoServerModel;
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace MongoDB.Component
             var list = new List<MongoTreeNode>();
             if (rst.Ok)
             {
-                BuildTreeNode(list, Guid.Empty, rst.Response);
+                BuildTreeNode(list, 0, rst.Response);
             }
             return list;
         }

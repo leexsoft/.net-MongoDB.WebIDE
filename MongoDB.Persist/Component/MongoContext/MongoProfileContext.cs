@@ -10,12 +10,10 @@ namespace MongoDB.Component
 {
     public class MongoProfileContext : MongoBase
     {
-        public MongoProfileContext(string id)
+        public MongoProfileContext(uint id)
         {
-            var guid = Guid.Parse(id);
-
-            var dbNode = MongoCache.GetTreeNode(guid);
-            Database = MongoCache.GetMongoObject(guid) as MongoDatabaseModel;
+            var dbNode = MongoCache.GetTreeNode(id);
+            Database = MongoCache.GetMongoObject(id) as MongoDatabaseModel;
             var serverNode = MongoCache.GetTreeNode(dbNode.PID);
             Server = MongoCache.GetMongoObject(serverNode.ID) as MongoServerModel;
         }
@@ -41,17 +39,17 @@ namespace MongoDB.Component
             }
         }
 
-        public List<MongoProfileModel> GetProfileData(int limit)
+        public List<ProfileModel> GetProfileData(int limit)
         {
             var mongo = new MongoClient(string.Format(MongoConst.ConnString, Server.Name));
             var server = mongo.GetServer();
             var db = server.GetDatabase(Database.Name);
 
             var cursors = db.GetProfilingInfo(Query.Null).SetLimit(limit);
-            var list = new List<MongoProfileModel>();
+            var list = new List<ProfileModel>();
             foreach (var item in cursors)
             {
-                list.Add(new MongoProfileModel 
+                list.Add(new ProfileModel 
                 {
                     Client = item.Client,
                     Timestamp = item.Timestamp,

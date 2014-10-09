@@ -11,7 +11,7 @@ namespace MongoDB.Model
         /// <summary>
         /// 唯一值
         /// </summary>
-        public Guid ID { get; set; }
+        public uint ID { get; set; }
         /// <summary>
         /// 列名
         /// </summary>

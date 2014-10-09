@@ -10,7 +10,7 @@ namespace MongoDB.Component
     {
         private IMongoInfo MongoInfo { get; set; }
 
-        public static MongoInfoFactory Create(string id, int type)
+        public static MongoInfoFactory Create(uint id, int type)
         {
             var factory = new MongoInfoFactory();
             if (type == (int)MongoTreeNodeType.Server)

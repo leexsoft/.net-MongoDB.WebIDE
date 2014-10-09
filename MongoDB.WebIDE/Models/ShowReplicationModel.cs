@@ -5,7 +5,7 @@ namespace MongoDB.WebIDE.Models
 {
     public class ShowReplicationModel
     {
-        public string ID { get; set; }
+        public uint ID { get; set; }
 
         public string Title { get; set; }
 

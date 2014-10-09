@@ -8,7 +8,7 @@ namespace MongoDB.Model
     /// <summary>
     /// Profile信息
     /// </summary>
-    public class MongoProfileModel
+    public class ProfileModel
     {
         /// <summary>
         /// 

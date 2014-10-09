@@ -2,7 +2,7 @@
 {
     public class ShowInfoModel
     {
-        public string ID { get; set; }
+        public uint ID { get; set; }
 
         public string Title { get; set; }
 

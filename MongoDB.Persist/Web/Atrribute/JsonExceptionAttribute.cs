@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using log4net;
 
 namespace MongoDB.Persist.Web.Atrribute
 {

@@ -28,6 +28,9 @@ namespace MongoDB.Component
 
         private void GetServer()
         {
+            var watch = new Stopwatch();
+            watch.Start();
+
             var serverNodes = new HashSet<uint>();
             var xml = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/servers.config"));
             xml.Descendants("Server").ToList().ForEach(item =>
@@ -55,7 +58,13 @@ namespace MongoDB.Component
                 MongoObjects.Add(serverModel.ID, serverModel);
             });
 
+            //并行
             Parallel.ForEach(serverNodes, id => GetDB(id));
+            //循环
+            //serverNodes.ToList().ForEach(id => GetDB(id));
+
+            LogManager.GetLogger("InfoLog").Info(string.Format("**获取所有对象共花费了大约{0}毫秒的时间", watch.ElapsedMilliseconds));
+            watch.Stop();
         }
 
         private void GetDB(uint serverid)
@@ -105,7 +114,10 @@ namespace MongoDB.Component
                                 MongoObjects.Add(db.ID, db);
                             });
 
+                            //并行
                             Parallel.ForEach(dbNodes, id => GetCollection(server, id));
+                            //循环
+                            //dbNodes.ToList().ForEach(id => GetCollection(server, id));
                         }
                     }
                 }
@@ -159,7 +171,10 @@ namespace MongoDB.Component
                             MongoObjects.Add(tbl.ID, tbl);
                         });
 
+                        //并行
                         Parallel.ForEach(tblNodes, id => GetFieldAndIndex(db, id));
+                        //循环
+                        //tblNodes.ToList().ForEach(id => GetFieldAndIndex(db, id));
                     }
                 }
                 catch (Exception ex)

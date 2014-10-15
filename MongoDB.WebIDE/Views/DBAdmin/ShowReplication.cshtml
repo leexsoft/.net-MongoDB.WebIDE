@@ -1,5 +1,5 @@
 ﻿@using MongoDB.WebIDE.Models
-@using MongoDB.Driver
+@using MongoDB.Defination
 @model ShowReplicationModel
 @section style{
 	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/ztree/css/zTreeStyle.css")">
@@ -38,5 +38,8 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowInfo?id=@Model.ID&type=@((int)MongoTreeNodeType.Server)">返回【统计信息】</a>
 	</div>
 </div>

@@ -33,3 +33,12 @@ else if (Model.Type == (int)MongoTreeNodeType.Database)
 		<a class="accordion-toggle" href="ShowProfile?id=@Model.ID">Profile优化</a>
 	</div>
 }
+else if (Model.Type == (int)MongoTreeNodeType.Collection)
+{
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowData?id=@Model.TblFillerID">查看数据</a>
+	</div>
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowIndex?id=@Model.IdxFillerID">查看索引</a>
+	</div>
+}

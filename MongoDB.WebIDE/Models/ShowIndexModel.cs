@@ -8,6 +8,8 @@ namespace MongoDB.WebIDE.Models
     {
         public uint ID { get; set; }
 
+        public uint TblID { get; set; }
+
         public string Title { get; set; }
 
         public List<MongoTreeNode> Fields { get; set; }

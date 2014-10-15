@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using MongoDB.Component;
 using MongoDB.Defination;
@@ -36,6 +37,10 @@ namespace MongoDB.WebIDE.Controllers
             {
                 var table = MongoCache.GetMongoObject(id) as MongoCollectionModel;
                 model.Title = table.FullInfo;
+                var tblFilter = MongoCache.GetTreeNodes().Single(node => node.PID == id && node.Type == MongoTreeNodeType.TableFiller);
+                model.TblFillerID = tblFilter.ID;
+                var idxFilter = MongoCache.GetTreeNodes().Single(node => node.PID == id && node.Type == MongoTreeNodeType.IndexFiller);
+                model.IdxFillerID = idxFilter.ID;
             }
 
             //获取数据
@@ -101,6 +106,7 @@ namespace MongoDB.WebIDE.Controllers
             var model = new ShowDataModel
             {
                 ID = id,
+                TblID = mongo.Table.ID,
                 Title = mongo.Table.FullInfo,
                 Fields = mongo.GetFields()
             };
@@ -134,6 +140,7 @@ namespace MongoDB.WebIDE.Controllers
             var model = new ShowIndexModel
             {
                 ID = id,
+                TblID = mongo.Table.ID,
                 Title = mongo.Table.FullInfo,
                 Fields = mongo.GetFieldNodes(),
                 Indexes = mongo.GetIndexes()

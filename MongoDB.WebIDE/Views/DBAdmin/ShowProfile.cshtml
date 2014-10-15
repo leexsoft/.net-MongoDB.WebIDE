@@ -1,5 +1,6 @@
 ﻿@using MongoDB.WebIDE.Models
 @using MongoDB.Driver
+@using MongoDB.Defination
 @model ShowProfileModel
 @section script{
 	<script src="@Url.Content("~/Content/js/showprofile.js")" type="text/javascript"></script>
@@ -88,6 +89,9 @@
 					</tr>
 				</table>
 			</div>
+		</div>
+	</div>
+	<div class="accordion-heading alert-success">
+		<a class="accordion-toggle" href="ShowInfo?id=@Model.ID&type=@((int)MongoTreeNodeType.Database)">返回【统计信息】</a>
 	</div>
 </div>
-</div> 

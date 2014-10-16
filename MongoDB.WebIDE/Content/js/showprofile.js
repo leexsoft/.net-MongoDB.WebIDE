@@ -3,6 +3,8 @@
         $(this).click(function () {
             if ($(this).val() == 1) {
                 $('#txtSlowms').prop('disabled', false);
+            } else {
+                $('#txtSlowms').prop('disabled', true);
             }
         });
     });
@@ -68,16 +70,15 @@
                         var datetime = jsonDateParser(list[i].Timestamp);
                         var html = '<tr>' +
                                    '<td>' + list[i].Client + '</td>' +
+                                   '<td>' + list[i].Op + '</td>' +
+                                   '<td>' + list[i].Namespace + '</td>' +
+                                   '<td>' + list[i].Command + '</td>' +
                                    '<td>' + datetime.toLocaleDateString() + ' ' + datetime.toLocaleTimeString() + '</td>' +
                                    '<td>' + list[i].Duration + '</td>' +
-                                   '<td>' + list[i].Info + '</td>' +
-                                   '<td>' + list[i].Op + '</td>' +
                                    '<td>' + list[i].NumberToReturn + '</td>' +
-                                   '<td>' + list[i].NumberReturned + '</td>' +
                                    '<td>' + list[i].NumberScanned + '</td>' +
+                                   '<td>' + list[i].NumberReturned + '</td>' +
                                    '<td>' + list[i].NumberOfYields + '</td>' +
-                                   '<td>' + list[i].NumberMoved + '</td>' +
-                                   '<td>' + list[i].NumberUpdated + '</td>' +
                                    '</tr>';
                         $('table').append(html);
                     }

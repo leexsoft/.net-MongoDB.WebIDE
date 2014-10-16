@@ -5,6 +5,7 @@ using MongoDB.Defination;
 using MongoDB.Driver;
 using MongoDB.Model;
 using MongoDB.Driver.Builders;
+using Newtonsoft.Json;
 
 namespace MongoDB.Component
 {
@@ -25,7 +26,7 @@ namespace MongoDB.Component
             var db = server.GetDatabase(Database.Name);
 
             var rst = db.GetProfilingLevel();
-            if(string.IsNullOrEmpty(rst.ErrorMessage))
+            if (string.IsNullOrEmpty(rst.ErrorMessage))
             {
                 if (rst.Ok)
                 {
@@ -49,22 +50,38 @@ namespace MongoDB.Component
             var list = new List<ProfileModel>();
             foreach (var item in cursors)
             {
-                list.Add(new ProfileModel 
+                list.Add(new ProfileModel
                 {
                     Client = item.Client,
+                    Op = item.Op,
+                    Namespace = item.Namespace,
+                    Command = GetCommand(item),
                     Timestamp = item.Timestamp,
                     Duration = item.Duration.TotalMilliseconds,
-                    Info = string.IsNullOrEmpty(item.Info) ? "" : item.Info,
-                    Op = item.Op,
                     NumberToReturn = item.NumberToReturn,
                     NumberReturned = item.NumberReturned,
                     NumberScanned = item.NumberScanned,
-                    NumberOfYields = item.NumberOfYields,
-                    NumberMoved = item.NumberMoved,
-                    NumberUpdated = item.NumberUpdated
+                    NumberOfYields = item.NumberOfYields
                 });
             }
             return list;
+        }
+
+        private string GetCommand(SystemProfileInfo info)
+        {
+            if (info.Command != null)
+            {
+                return info.Command.ToString();
+            }
+            if (info.Query != null)
+            {
+                return info.Query.ToString();
+            }
+            if (info.UpdateObject != null)
+            {
+                return info.UpdateObject.ToString();
+            }
+            return string.Empty;
         }
 
         public bool SetProfile(int level, int slowms)
@@ -82,8 +99,8 @@ namespace MongoDB.Component
             {
                 rst = db.SetProfilingLevel((ProfilingLevel)level);
             }
-            
-            if(string.IsNullOrEmpty(rst.ErrorMessage))
+
+            if (string.IsNullOrEmpty(rst.ErrorMessage))
             {
                 return true;
             }

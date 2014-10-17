@@ -59,9 +59,9 @@ namespace MongoDB.Component
                     Timestamp = item.Timestamp,
                     Duration = item.Duration.TotalMilliseconds,
                     NumberToReturn = item.NumberToReturn,
-                    NumberReturned = item.NumberReturned,
                     NumberScanned = item.NumberScanned,
-                    NumberOfYields = item.NumberOfYields
+                    NumberReturned = item.NumberReturned,
+                    ResponseLength = item.ResponseLength
                 });
             }
             return list;

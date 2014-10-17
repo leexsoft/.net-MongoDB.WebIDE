@@ -23,18 +23,14 @@ namespace MongoDB.Model
 
         public DateTime Timestamp { get; set; }
 
-        public double Duration { get; set; }        
+        public double Duration { get; set; }
 
         public int NumberToReturn { get; set; }
 
-        public int NumberReturned { get; set; }
-
         public int NumberScanned { get; set; }
 
-        public int NumberOfYields { get; set; }
+        public int NumberReturned { get; set; }
 
-        //public string Info { get; set; }
-        //public int NumberMoved { get; set; }
-        //public int NumberUpdated { get; set; }
+        public int ResponseLength { get; set; }
     }
 }

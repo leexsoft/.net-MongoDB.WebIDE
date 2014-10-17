@@ -53,7 +53,11 @@
                         var item = list[i];
                         var j = 0;
                         for (j = 0; j < item.length; j++) {
-                            html += '<td>' + item[j].Value + '</td>';
+                            if (typeof (item[j].Value == "object")) {
+                                html += '<td>' + $.toJSONString(item[j].Value) + '</td>';
+                            } else {
+                                html += '<td>' + item[j].Value + '</td>';
+                            }
                         }
                         html += '</tr>';
                         $('table').append(html);

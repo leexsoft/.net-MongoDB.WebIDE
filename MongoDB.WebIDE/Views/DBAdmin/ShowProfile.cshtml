@@ -61,7 +61,7 @@
 						</th>
 						<th>
 							<span class="label label-info">操作对象</span>
-						</th>						
+						</th>
 						<th>
 							<span class="label label-info">命令</span>
 						</th>
@@ -75,16 +75,31 @@
 							<span class="label label-info">返回对象数</span>
 						</th>
 						<th>
-							<span class="label label-info">扫描对象数</span>
+							<span class="label label-info">扫描记录数</span>
 						</th>
 						<th>
 							<span class="label label-info">返回结果数</span>
-						</th>						
+						</th>
 						<th>
-							<span class="label label-info">查询结果大小</span>
+							<span class="label label-info">结果集大小</span>
 						</th>
 					</tr>
 				</table>
+			</div>
+		</div>
+	</div>
+	<div class="accordion-group">
+		<div class="accordion-heading alert-success">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">优化建议</a>
+		</div>
+		<div id="collapseThree" class="accordion-body collapse">
+			<div class="accordion-inner alert">
+				<ol>
+					<li>当【扫描记录数】远大于【返回记录数】，可以考虑通过增加索引来优化查询效率</li>
+					<li>当【返回结果集】过大，那么说明我们返回的结果集太大了，可以考虑只返回所需要的字段</li>
+					<li>如果写查询量或者update量过大的话，多加索引是会有好处的；执行 update 操作时同样检查一下【扫描记录数】，并使用索引减少文档扫描数量</li>
+					<li>如果读操作很少，那么尽量不要添加索引，因为索引越多，写操作会越慢；如果读操作很多，则需要考虑创建合适的索引</li>
+				</ol>
 			</div>
 		</div>
 	</div>

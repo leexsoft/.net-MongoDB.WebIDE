@@ -64,6 +64,7 @@
             success: function (rst) {
                 if (rst.Success) {
                     $('table tr:not(:first)').remove();
+                    $('#collapseTwo>.accordion-inner').addClass('datatable');
                     var list = rst.Result;
                     var i = 0;
                     for (i = 0; i < list.length; i++) {
@@ -78,7 +79,7 @@
                                    '<td>' + list[i].NumberToReturn + '</td>' +
                                    '<td>' + list[i].NumberScanned + '</td>' +
                                    '<td>' + list[i].NumberReturned + '</td>' +
-                                   '<td>' + list[i].NumberOfYields + '</td>' +
+                                   '<td>' + list[i].ResponseLength + '</td>' +
                                    '</tr>';
                         $('table').append(html);
                     }
